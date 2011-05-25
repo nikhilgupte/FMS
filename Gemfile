@@ -7,7 +7,10 @@ gem 'rails', '3.0.7'
 
 gem 'pg'
 
-gem "sass"
+gem 'rake', '~> 0.8.7'
+gem "acts_as_audited", "2.0.0.rc7", :git => 'https://github.com/collectiveidea/acts_as_audited.git'
+gem "authlogic", :git => "https://github.com/lichtamberg/authlogic.git"
+gem "compass"
 gem "will_paginate"
 gem "settingslogic"
 gem "haml-rails", ">= 0.3.4"
@@ -25,3 +28,5 @@ gem "capybara", :group => :cucumber
 gem "launchy", :group => :cucumber
 gem "database_cleaner", ">= 0.5.2", :group => :cucumber
 gem "pickle", :group => :cucumber
+gem 'seed-fu'
+gem "default_value_for", :git => 'https://github.com/FooBarWidget/default_value_for.git'

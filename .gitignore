@@ -3,3 +3,4 @@
 log/*.log
 tmp/**/*
 public/stylesheets/*
+config/database.yml
