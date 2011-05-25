@@ -1,0 +1,162 @@
+.reqd {
+  color: #c00;
+  font-size: 10pt;
+}
+
+form {
+  legend {
+    font-size: 11pt;
+    padding-bottom: 5px;
+    font-weight: bold;
+  }
+  fieldset {
+    padding-bottom: 5px;
+    margin-top: 5px;
+  	ol {
+    	border-bottom: 2px solid #eee;
+  		margin: 0;
+  		padding: 0;
+    	li {
+      	margin: 5px;
+      	padding-bottom: 5px;
+      	font-size: 10pt;
+      	//overflow: hidden;
+				list-style-type: none!important;
+    	}
+    	span.label, label {
+      	width: 150px;
+      	text-align: right;
+      	display:block;
+      	float: left;
+      	margin-right: 10px;
+      	margin-top: 5px;
+    	}
+			span.label { margin-top: 0}
+    	.tip {
+      	display: block;
+      	margin: 2px 0;
+      	margin-left: 160px;
+    	}
+			.value {
+      	margin-left: 160px;
+			}
+		}
+	  ul {
+	    margin-left: 160px;
+	    li {
+	      margin: 2px 0;
+	      .reqd { color: #fff; }
+	    }
+	    li:first-child {
+	      .reqd { color: #c00; }
+	    }
+	  }
+	}
+  input,textarea,select {
+    margin: 2px;
+  }
+  input[type=checkbox] {
+    margin-top: 9px;
+	}
+  select {
+    margin-top: 6px;
+	}
+  input[type=text],input[type=password] {
+    width: 500px;
+    font-size: 10pt;
+  }
+  .add {
+    margin: 2px 0;
+    font-size: 9pt;
+  }
+  a {
+    color: #000;
+  }
+  .add_child, .buttons {
+		padding: 0;
+		margin-top: 10px;
+    margin-left: 160px;
+    border: 0;
+		overflow: hidden;
+		li {
+    		list-style: none!important;
+				float: left;
+				margin-right: 30px;
+				a {
+					margin-top: 4px;
+					display: block;
+				}
+		}
+  }
+	.add_child {
+			margin-top:0;
+			margin-bottom:20px;
+	}
+  .field_with_errors {
+    display: inline;
+    input {
+      border: 1px solid #c00;
+      padding: 5px!important;
+			background: #ffe;
+    }
+  }
+}
+
+textarea {
+  padding: 5px;
+  width: 500px;
+  height: 200px;
+}
+
+  
+.error {color:#c00;font-weight:normal}
+div#errorExplanation { border:1px solid #c00;background-color:#fff!important;margin-bottom:10px;padding:0; height:100%;}
+div#errorExplanation p {padding-left:5px;margin:0}
+div#errorExplanation ul {padding:5px 10px;list-style: none;margin:0!important}
+div#errorExplanation li { padding-left:20px!important; margin:5px 0; background:url(../images/icons/error.gif) no-repeat left center;}
+div.errorExplanation h2 { font-size:11pt;color:#fff!important;margin:0 !important;padding:0;background-color:#c00 !important;}
+
+label.inline {
+  margin: 0;
+  width: auto;
+  display: inline;
+  text-align: left;
+  float: none;
+}
+
+ul.options {
+	padding: 0;
+	overflow: hidden;
+  li { 
+		padding: 0!important;
+    margin: 0!important;
+    margin-right: 30px!important;
+    float: left;
+  }
+  label { 
+    margin: 0!important;
+    width: auto;
+    float: none;
+    display: inline;
+  }
+}
+
+input.numeric {
+	width: 100px!important;
+	text-align: right;
+}
+.remove {
+	float: right;
+}
+
+textarea.expandable {
+	height: 70px;
+}
+textarea.expandable:focus {
+	height: 370px;
+}
+
+.readonly {
+		color: #999;
+}
+

@@ -14,6 +14,14 @@ class User < ActiveRecord::Base
     #c.my_config_option = my_value
   end
 
+  def name
+    "#{first_name} #{last_name}"
+  end
+
+  def to_s
+    name
+  end
+
   private
   def generate_prefix
     prefix = "#{first_name[0]}#{last_name[0]}".upcase

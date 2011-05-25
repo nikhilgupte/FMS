@@ -1,0 +1,3 @@
+class Accord < Formulation
+end
+

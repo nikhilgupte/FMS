@@ -1,9 +1,42 @@
 !!!
 %html
   %head
-    %title Fms
-    = stylesheet_link_tag :all
-    = javascript_include_tag :defaults
+    %title= Settings.app_name
+    = stylesheet_link_tag 'screen.css', :media => 'screen, projection'
     = csrf_meta_tag
   %body
-    = yield
+    #root
+      #header
+        #top_menu
+          .wrapper
+            .logo= Settings.app_name
+            %ul
+              - if logged_in?
+                %li= current_user
+                %li= link_to 'Log out', session_path, :method => :delete
+
+        #main_menu
+          .wrapper
+            %ul
+              %li.current= link_to 'Formulations', fragrances_path
+              %li= link_to 'Ingredients', '#'
+              %li= link_to 'Admin', '#'
+        #sub_menu
+          .wrapper
+            = yield :sub_menu
+      #middle
+        .wrapper
+          = render 'shared/flash_message'
+          #main
+            #page_header
+              = yield :page_header
+              %h1= @page_title
+            = yield
+      #root_footer
+    #footer
+      .wrapper
+        = image_tag "shk_logo.png", :style => "margin-right: 10px;float: left"
+        S. H. Kelkar &amp; Co. Pvt. Ltd. 
+    = javascript_include_tag :defaults
+    = javascript_include_tag 'jquery.hint'
+    = yield :tail

@@ -1,0 +1,143 @@
+@import "compass/utilities";
+@import "compass/css3";
+@import "blueprint/typography";
+
+// Here is where you can define your constants for your application and to configure the blueprint framework.
+// Feel free to delete these if you want keep the defaults:
+
+$blueprint-grid-columns: 24;
+$blueprint-container-size: 950px;
+$blueprint-grid-margin: 10px;
+$quiet-color: #aaa;
+$blueprint-table-stripe-color: #f9f9f9;
+
+// Use this to calculate the width based on the total width.
+// Or you can set $blueprint-grid-width to a fixed value and unset $blueprint-container-size -- it will be calculated for you.
+$blueprint-grid-width: ($blueprint-container-size + $blueprint-grid-margin) / $blueprint-grid-columns - $blueprint-grid-margin;
+
+@mixin pipes {
+	@include horizontal-list;
+	li:before { content: "|"; padding-right: 10px }
+	li:first-child:before { content: ""; }
+	li { margin-right: 5px }
+}
+
+.note {
+	margin: 10px 0;
+	@include quiet;
+}
+span.reqd {
+	font-size: 150%;
+	color: #c00;
+}
+.tip {
+	@include quiet;
+}
+
+h1 {
+	font-size: 2.2em !important;
+	margin-bottom: 20px!important;
+}
+
+@mixin large { font-size: 120%; }
+@mixin x-large { font-size: 150%; }
+
+.loud {
+	@include x-large;
+}
+
+.hidden { display: none }
+
+object {
+	display: block;
+}
+
+.empty {
+	@include x-large;
+}
+
+.flash {
+  //.border-radius(5px);
+  //.border-radius-for-ie(5px);
+  padding: 5px 10px!important;
+  margin: 5px 0;
+  div { padding: 2px; }
+  a { color: inherit; text-decoration: none; font-weight: bold;  float: right;}
+}
+.success { background-color: #9f9!important; border: 1px solid #6e6!important; }
+.notice { background-color: #ffb!important; }
+.error { background-color: #c33!important; color: #fff!important;border: 1px solid #c00!important }
+
+
+.notice { background-color: #f80; border-width: 2px 0; }
+#loading{
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 5000;
+  background-color: #b00;
+  font-size: 150%;
+  color: white;
+  padding: 2px;
+  font-size: 9.5pt;
+  margin: 5px;
+  display:none;
+}
+
+table.form {
+	width: 100%;
+  tr {
+    margin: 100px;
+    border: 1px solid #fff;
+  }
+  th {
+    background: #eee;
+    text-align: right;
+		width: 15%;
+  }
+  th, td {
+    padding: 5px;
+  }
+  a {
+    color: #000;
+  }
+}
+table.list {
+  width: 100%;
+	margin: 10px 0;
+  thead {
+    th {
+      font-weight: bold;
+      background: #eee;
+    }
+  }
+  td, th {
+		&.disabled {
+			text-decoration: line-through;
+		}
+    overflow: hidden;
+    padding: 5px;
+		vertical-align: top;
+  }
+  td {
+    border-bottom: 1px solid #ccc;
+  }
+}
+
+.ops {
+		float: right;
+}
+.links {
+	text-align: right;
+}
+.hidden { display: none }
+.empty { font-size: 12pt; color: #ccc; padding: 10px; text-align: center }
+
+ul.meta {
+	margin: 5px 0;
+	@include pipes;
+}
+
+.blur {
+	color: #999;
+}

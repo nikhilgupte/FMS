@@ -1,0 +1,28 @@
+- @page_title = 'Fragrances'
+
+- content_for :page_header do
+  .search_box
+    - form_tag nil, :class => 'todo' do
+      = text_field_tag :q, nil, :class => :hint, :title => 'Search by fragrance name or code'
+
+
+%table.striped.list
+  %thead
+    %tr
+      %th State
+      %th Code
+      %th Name
+      %th Year
+      %th Owner
+      %th Updated
+  %tbody
+    - @fragrances.each do |fragrance|
+      %tr
+        %td= fragrance.state
+        %td= link_to fragrance.code, fragrance
+        %td= link_to fragrance.name, fragrance
+        %td= fragrance.product_year
+        %td== #{fragrance.owner}
+        %td{ :title => fragrance.updated_at.to_s(:long)}== #{time_ago_in_words fragrance.updated_at} ago
+
+= will_paginate @fragrances

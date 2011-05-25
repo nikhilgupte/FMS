@@ -1,0 +1,105 @@
+@import "compass/reset";
+@import "blueprint";
+@import "partials/base";
+@import "partials/page";
+@import "partials/pagination";
+@import "partials/form";
+@import "partials/custom";
+
+#top_menu {
+	background: #001C3C;
+	background: #000;
+	border-bottom: 1px solid #aaa;
+	color: #ccc;
+	span {
+		font-size: 14pt;
+	}
+	ul {
+		@include float-right;
+		@include pipes;
+		margin: 2px 0;
+	}
+	a {
+		color: inherit!important;
+	}
+}
+
+#main_menu {
+	background: #008;
+	background: #004393;
+	ul {
+		@include inline-block-list;
+		margin-top: 10px;
+		li {
+			@include linear-gradient(color-stops(#005CC3, #004393));
+			padding: 4px 15px;
+			margin: 1px 3px 0;
+			@include box-shadow(#333, 0, 0, 5px);
+			@include border-top-radius(4px);
+			a {
+					color: #eef!important;
+					text-decoration: none;
+					font-weight: bold;
+			}
+			&.current {
+				background: #eee;
+				@include box-shadow(none);
+				border: 1px solid #333;
+				border-bottom: 0;
+				a { color: #333!important; }
+			}
+			&.non_tab {
+				background: none;
+				@include box-shadow(none);
+			}
+		}
+	}
+}
+
+#sub_menu {
+	background: #eee;
+	border-bottom: 1px solid #ddd;
+	padding: 3px 0;
+	ul {
+		@include inline-block-list;
+		> li {
+			padding: 1px 10px;
+			margin-right: 10px;
+			font-weight: bold;
+			a {
+				color: #777!important;
+				text-decoration: none;
+				}
+			&.current {
+				a {
+					color: #000;
+				}
+			}
+		}
+	}
+}
+
+#footer {
+	background: #eee;
+	border-top: 1px solid #ddd;
+	padding-top: 10px;
+	margin-top: 10px;
+	color: #999;
+	ul {
+		@include pipes;
+	}
+}
+
+@import "compass/layout/sticky-footer";
+@include sticky-footer(50px);
+
+
+.wrapper {
+	@include container;
+}
+
+#page_header {
+		h1 {
+			margin: 10px 0;
+		}
+}

@@ -1,0 +1,14 @@
+defaults: &defaults
+  app_name: Formulation Management System
+
+development:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+production:
+  <<: *defaults
+
+test: &test
+  <<: *defaults

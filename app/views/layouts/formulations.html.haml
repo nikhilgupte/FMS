@@ -1,0 +1,7 @@
+= inside_layout 'application' do
+  - content_for :sub_menu do
+    %ul
+      %li= link_to_unless_current 'Fragrances', fragrances_path
+      %li= link_to_unless_current 'Accords', "#"
+
+  = yield

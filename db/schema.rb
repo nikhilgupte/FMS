@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110525091538) do
+ActiveRecord::Schema.define(:version => 20110525152746) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -43,6 +43,19 @@ ActiveRecord::Schema.define(:version => 20110525091538) do
   add_index "currencies", ["code"], :name => "index_currencies_on_code", :unique => true, :case_sensitive => false
   add_index "currencies", ["name"], :name => "index_currencies_on_name", :unique => true, :case_sensitive => false
 
+  create_table "formulation_items", :force => true do |t|
+    t.integer  "formulation_id", :null => false
+    t.integer  "compound_id",    :null => false
+    t.string   "compound_type",  :null => false
+    t.float    "quantity",       :null => false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "formulation_items", ["compound_type", "compound_id"], :name => "index_formulation_items_on_compound_type_and_compound_id"
+  add_index "formulation_items", ["formulation_id"], :name => "index_formulation_items_on_formulation_id"
+
   create_table "formulations", :force => true do |t|
     t.string   "type"
     t.string   "code"
@@ -62,6 +75,14 @@ ActiveRecord::Schema.define(:version => 20110525091538) do
   add_index "formulations", ["state"], :name => "index_formulations_on_state"
   add_index "formulations", ["type"], :name => "index_formulations_on_type"
   add_index "formulations", ["code"], :name => "index_formulations_on_code", :unique => true, :case_sensitive => false
+
+  create_table "forumlation_items", :force => true do |t|
+    t.integer  "formulation_id"
+    t.integer  "compound_id"
+    t.float    "quantity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "ingredients", :force => true do |t|
     t.string   "name"
@@ -108,6 +129,8 @@ ActiveRecord::Schema.define(:version => 20110525091538) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true, :case_sensitive => false
   add_index "users", ["prefix"], :name => "index_users_on_prefix", :unique => true, :case_sensitive => false
+
+  add_foreign_key "formulation_items", ["formulation_id"], "formulations", ["id"], :on_delete => :cascade, :name => "formulation_items_formulation_id_fkey"
 
   add_foreign_key "prices", ["currency_id"], "currencies", ["id"], :on_delete => :cascade, :name => "prices_currency_id_fkey"
 

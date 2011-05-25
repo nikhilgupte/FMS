@@ -1,0 +1,2 @@
+class Fragrance < Formulation
+end

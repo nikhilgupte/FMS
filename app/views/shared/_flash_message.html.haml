@@ -1,0 +1,6 @@
+- for name in [:notice, :success, :error]
+  - if flash[name]
+    .flash{ :class => name }
+      %div
+        = flash[name]
+        %a{ :href => '#' } &times;
