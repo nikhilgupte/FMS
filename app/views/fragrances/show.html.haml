@@ -1,0 +1,44 @@
+- @page_title = "Fragrance: #{@fragrance}"
+
+%ul.buttons
+  %li= link_to "Edit Fragrance", edit_fragrance_path, :class => 'primary'
+
+%table.form
+  %tr
+    %th Owner
+    %td= @fragrance.owner
+    %th State
+    %td= @fragrance.state
+  %tr
+    %th Product Year
+    %td= @fragrance.product_year
+    %th Origin Formula ID
+    %td= @fragrance.origin_formula_id
+  %tr
+    %th Top Note
+    %td{ :colspan => 3 }= @fragrance.top_note || "N/A"
+  %tr
+    %th Middle Note
+    %td{ :colspan => 3 }= @fragrance.middle_note || "N/A"
+  %tr
+    %th Base Note
+    %td{ :colspan => 3 }= @fragrance.base_note || "N/A"
+
+%h2 Ingredients
+
+%table.list.striped
+  %thead
+    %tr
+      %th Compound
+      %th{ :style => 'width: 100px;text-align: center;' } Quantity
+      %th{ :style => 'width: 100px;text-align: center;' } Cost
+  %tbody
+    - @fragrance.items.each do |item|
+      %tr
+        %td= item.compound
+        %td.numeric
+          = number_with_precision item.quantity, :precision => 3
+          == (#{number_to_percentage item.quantity_percentage})
+        %td.numeric
+          = number_to_currency 8292.80, :unit => 'Rs.'
+          == (#{number_to_percentage 12.7})

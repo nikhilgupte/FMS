@@ -72,26 +72,7 @@ form {
   a {
     color: #000;
   }
-  .add_child, .buttons {
-		padding: 0;
-		margin-top: 10px;
-    margin-left: 160px;
-    border: 0;
-		overflow: hidden;
-		li {
-    		list-style: none!important;
-				float: left;
-				margin-right: 30px;
-				a {
-					margin-top: 4px;
-					display: block;
-				}
-		}
-  }
-	.add_child {
-			margin-top:0;
-			margin-bottom:20px;
-	}
+
   .field_with_errors {
     display: inline;
     input {
@@ -100,6 +81,9 @@ form {
 			background: #ffe;
     }
   }
+	ul.buttons {
+		margin-left: 160px;
+	}
 }
 
 textarea {
@@ -160,3 +144,37 @@ textarea.expandable:focus {
 		color: #999;
 }
 
+
+.primary {
+	@include my-border-radius(4px);
+	@include my-gradient(color-stops(#090, #070));
+	//font-size: 110%;
+	color: #fff!important;
+	text-decoration: none;
+	border: 0;
+	padding: 5px 10px;
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+.add_child, .buttons {
+	padding: 0;
+	margin: 0;
+	margin-bottom: 10px;
+  border: 0;
+	overflow: hidden;
+	li {
+ 		list-style: none!important;
+		float: left;
+		margin-right: 30px;
+		a {
+			margin-top: 4px;
+			display: block;
+		}
+	}
+}
+.add_child {
+		margin-top:0;
+		margin-bottom:20px;
+}

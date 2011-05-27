@@ -1,6 +1,7 @@
 Fms::Application.routes.draw do
 
   root :to => "fragrances#index"
+  resource :session, :only => [:new, :create, :destroy]
   resources :fragrances
 
   # The priority is based upon order of creation:

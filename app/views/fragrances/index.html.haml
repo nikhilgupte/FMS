@@ -5,6 +5,8 @@
     - form_tag nil, :class => 'todo' do
       = text_field_tag :q, nil, :class => :hint, :title => 'Search by fragrance name or code'
 
+%ul.buttons
+  %li= link_to "+ Create Fragrance", new_fragrance_path, :class => 'primary'
 
 %table.striped.list
   %thead

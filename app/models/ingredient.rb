@@ -8,4 +8,10 @@ class Ingredient < ActiveRecord::Base
       where("lower(code) = ?", code.strip.downcase).first
     end
   end
+
+  def to_s
+    "#{name} (##{code})"
+  end
+
+
 end

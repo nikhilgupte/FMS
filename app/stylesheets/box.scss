@@ -1,0 +1,43 @@
+@import "compass/reset";
+@import "blueprint";
+@import "partials/base";
+@import "partials/page";
+@import "partials/form";
+@import "partials/custom";
+
+body {
+	background: #f4f4f4;
+}
+
+.app_name {
+	font-weight: bold;
+	margin-bottom: 10px;
+	padding-bottom: 5px;
+	border-bottom: 2px solid #004393;
+}
+
+
+#box {
+	background: #fff;
+	width: 500px;
+	padding: 20px 20px;
+	margin: 150px auto;
+	margin-bottom: 10px;
+	@include my-box-shadow(#333, 0, 0, 5px);
+	@include border-radius(4px);
+	li {
+		@include no-bullets;
+	}
+	//label { width: 150px}
+}
+
+.wrapper {
+	@include container;
+}
+#footer {
+	padding-top: 0px;
+	.wrapper {
+		width: 500px;
+	}
+}
+

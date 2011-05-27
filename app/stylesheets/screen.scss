@@ -34,7 +34,7 @@
 			@include linear-gradient(color-stops(#005CC3, #004393));
 			padding: 4px 15px;
 			margin: 1px 3px 0;
-			@include box-shadow(#333, 0, 0, 5px);
+			@include my-box-shadow(#333, 0, 0, 5px);
 			@include border-top-radius(4px);
 			a {
 					color: #eef!important;
@@ -59,21 +59,26 @@
 #sub_menu {
 	background: #eee;
 	border-bottom: 1px solid #ddd;
-	padding: 3px 0;
+	height:28px;
 	ul {
 		@include inline-block-list;
 		> li {
-			padding: 1px 10px;
+			padding: 3px 10px;
+			margin-top: 2px;
 			margin-right: 10px;
 			font-weight: bold;
+			height: 21px;
+			position: relative;
 			a {
 				color: #777!important;
 				text-decoration: none;
-				}
+				display: block;
+			}
 			&.current {
 				a {
-					color: #000;
+					color: #000!important;
 				}
+				background: url('/images/subnav-current.gif') 50% 98% no-repeat;
 			}
 		}
 	}

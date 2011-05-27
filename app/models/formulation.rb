@@ -13,7 +13,7 @@ class Formulation < ActiveRecord::Base
   default_value_for :state, "draft"
 
   def to_s
-    "#{code} - #{name}"
+    "#{name} (##{code})"
   end
 
   class << self
@@ -32,6 +32,10 @@ class Formulation < ActiveRecord::Base
       end
       frag
     end
+  end
+
+  def total_quantity
+    items.sum(:quantity)
   end
 
   private 

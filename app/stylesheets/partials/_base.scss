@@ -22,122 +22,26 @@ $blueprint-grid-width: ($blueprint-container-size + $blueprint-grid-margin) / $b
 	li { margin-right: 5px }
 }
 
-.note {
-	margin: 10px 0;
-	@include quiet;
-}
-span.reqd {
-	font-size: 150%;
-	color: #c00;
-}
-.tip {
-	@include quiet;
-}
-
-h1 {
-	font-size: 2.2em !important;
-	margin-bottom: 20px!important;
+@mixin my-box-shadow(
+  $color : $default-box-shadow-color,
+  $hoff : $default-box-shadow-h-offset,
+  $voff : $default-box-shadow-v-offset,
+  $blur : $default-box-shadow-blur,
+  $spread : $default-box-shadow-spread,
+  $inset : $default-box-shadow-inset
+) {
+	@include box-shadow($color, $hoff, $voff, $blur, $spread, $inset);
+  behavior: url(/javascripts/ie/PIE.htc);
 }
 
-@mixin large { font-size: 120%; }
-@mixin x-large { font-size: 150%; }
-
-.loud {
-	@include x-large;
+@mixin my-gradient($color_stops) {
+	@include linear-gradient($color_stops);
+  -pie-background: linear-gradient($color_stops);
+  behavior: url(/javascripts/ie/PIE.htc);
 }
 
-.hidden { display: none }
-
-object {
-	display: block;
+@mixin my-border-radius($radius: $default-border-radius, $vertical-radius: false) {
+	@include border-radius($radius, $vertical-radius);
+  behavior: url(/javascripts/ie/PIE.htc);
 }
 
-.empty {
-	@include x-large;
-}
-
-.flash {
-  //.border-radius(5px);
-  //.border-radius-for-ie(5px);
-  padding: 5px 10px!important;
-  margin: 5px 0;
-  div { padding: 2px; }
-  a { color: inherit; text-decoration: none; font-weight: bold;  float: right;}
-}
-.success { background-color: #9f9!important; border: 1px solid #6e6!important; }
-.notice { background-color: #ffb!important; }
-.error { background-color: #c33!important; color: #fff!important;border: 1px solid #c00!important }
-
-
-.notice { background-color: #f80; border-width: 2px 0; }
-#loading{
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 5000;
-  background-color: #b00;
-  font-size: 150%;
-  color: white;
-  padding: 2px;
-  font-size: 9.5pt;
-  margin: 5px;
-  display:none;
-}
-
-table.form {
-	width: 100%;
-  tr {
-    margin: 100px;
-    border: 1px solid #fff;
-  }
-  th {
-    background: #eee;
-    text-align: right;
-		width: 15%;
-  }
-  th, td {
-    padding: 5px;
-  }
-  a {
-    color: #000;
-  }
-}
-table.list {
-  width: 100%;
-	margin: 10px 0;
-  thead {
-    th {
-      font-weight: bold;
-      background: #eee;
-    }
-  }
-  td, th {
-		&.disabled {
-			text-decoration: line-through;
-		}
-    overflow: hidden;
-    padding: 5px;
-		vertical-align: top;
-  }
-  td {
-    border-bottom: 1px solid #ccc;
-  }
-}
-
-.ops {
-		float: right;
-}
-.links {
-	text-align: right;
-}
-.hidden { display: none }
-.empty { font-size: 12pt; color: #ccc; padding: 10px; text-align: center }
-
-ul.meta {
-	margin: 5px 0;
-	@include pipes;
-}
-
-.blur {
-	color: #999;
-}

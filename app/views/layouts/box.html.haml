@@ -1,0 +1,16 @@
+!!!
+%html
+  %head
+    %title= [@page_title, Settings.app_name].compact.join(" - ")
+    = stylesheet_link_tag 'box', :media => 'screen, projection'
+    = csrf_meta_tag
+    %noscript
+      %meta{ "http-equiv" => 'refresh', "content" => '0; URL=/enable_js'}
+  %body
+    #box
+      .app_name
+        = Settings.app_name
+      %h1= @page_title
+      = render 'shared/flash_message'
+      = yield
+  = render 'layouts/footer'

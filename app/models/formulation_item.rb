@@ -3,6 +3,10 @@ class FormulationItem < ActiveRecord::Base
   belongs_to :formulation
   belongs_to :compound, :polymorphic => true
 
+  def quantity_percentage
+    quantity * 100.0 / formulation.total_quantity
+  end
+
   class << self
     def import_from_csv(file)
       CSV.read(file, :headers => true).each do |row|

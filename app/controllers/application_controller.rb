@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_filter :require_user
   protect_from_forgery
 
   #before_filter :require_user
@@ -19,6 +20,24 @@ class ApplicationController < ActionController::Base
 
   def logged_in?
     current_user.present?
+  end
+
+  def require_user
+    unless current_user
+      store_location
+      flash[:notice] = "You must be logged in to access this page"
+      redirect_to new_session_url
+      return false
+    end
+  end
+
+  def store_location
+    session[:return_to] = request.request_uri
+  end
+   
+  def redirect_back_or_default(default)
+    return_to = session.delete(:return_to)
+    redirect_to(return_to || default)
   end
 
 end
