@@ -8,4 +8,8 @@ class FragrancesController < ApplicationController
   def show
     @fragrance = Fragrance.find params[:id]
   end
+
+  def edit
+    @fragrance = Fragrance.find params[:id]
+  end
 end

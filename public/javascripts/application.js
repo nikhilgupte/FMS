@@ -1,5 +1,6 @@
 $(function() {
   $('.hint').hint();
+  $('textarea.elastic').elastic();
   $('form.todo').submit(todo);
   $('a.todo').click(todo);
   $("div.flash a").click(function() { $(this).parents('.flash').remove(); return false });

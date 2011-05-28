@@ -1,0 +1,35 @@
+- @page_title = "Edit Fragrance"
+
+= form_for @fragrance do |form|
+  %fieldset 
+    %ol.form
+      %li
+        = form.label :name
+        = form.text_field :name
+        = reqd
+      %li
+        = form.label :product_year
+        = form.text_field :product_year
+        = reqd
+      %li
+        = form.label :origin_formula_id, "Origin Formula ID"
+        = form.text_field :origin_formula_id
+        = reqd
+      %li
+        = form.label :top_note
+        = form.text_area :top_note, { :class => 'elastic', :style => 'width: 495px!important;height: 40px;' }
+      %li
+        = form.label :middle_note
+        = form.text_area :middle_note, { :class => 'elastic', :style => 'width: 495px!important;height: 40px;' }
+      %li
+        = form.label :base_note
+        = form.text_area :base_note, { :class => 'elastic', :style => 'width: 495px!important;height: 40px;' }
+  %fieldset#items
+    %legend Ingredients
+    = form.fields_for :items, @fragrance.items.limit(5) do |item_form|
+      = render :partial => 'item_form', :locals => { :form => item_form }
+  .add_child= add_nested_fields_for(form, :items, 'items', { :label => '+ Add Item', :partial => 'item_form', :object => FormulationItem.new })
+  %fieldset
+    %ol.buttons
+      %li= form.submit nil, :class => :primary
+      %li= cancel_link(@fragrance)

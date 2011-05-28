@@ -16,10 +16,7 @@ body {
 	margin: 10px 0;
 	@include quiet;
 }
-span.reqd {
-	font-size: 150%;
-	color: #c00;
-}
+
 .tip {
 	@include quiet;
 }

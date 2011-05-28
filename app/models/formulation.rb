@@ -12,6 +12,8 @@ class Formulation < ActiveRecord::Base
 
   default_value_for :state, "draft"
 
+  accepts_nested_attributes_for :items
+
   def to_s
     "#{name} (##{code})"
   end

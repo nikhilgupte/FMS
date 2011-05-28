@@ -1,0 +1,7 @@
+%ol.inline_form
+  %li
+    = form.label :compound_id
+    = form.select :compound_id, Ingredient.all.collect{ |i| [i, i.id] }, :include_blank => true
+  %li
+    = form.label :quantity
+    = form.text_field :quantity, :class => 'numeric'
