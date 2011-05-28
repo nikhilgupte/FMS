@@ -191,6 +191,7 @@ textarea.expandable:focus {
 }
 
 .add_child, .buttons {
+	@include clearfix;
 	padding: 0;
 	margin: 10px 0;
   border: 0;
