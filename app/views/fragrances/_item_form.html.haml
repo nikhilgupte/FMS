@@ -1,7 +1,18 @@
 %ol.inline_form
-  %li
-    = form.label :compound_id
-    = form.select :compound_id, Ingredient.all.collect{ |i| [i, i.id] }, :include_blank => true
+  %li{ :style => 'width: 100px' }
+    = form.label :compound_type, 'Type'
+    - if form.object.new_record?
+      = form.select :compound_type, %w(Ingredient Accord)
+    - else
+      = form.object.compound_type
+  %li{ :style => 'width: 400px' }
+    = form.label :compound_name, "Compound"
+    - if form.object.new_record?
+      = form.text_field :compound_name, :class => 'compound'
+      = form.hidden_field :compound_id, :class => 'compound_id'
+      .tip Enter the name or code
+    - else
+      = form.object.compound
   %li
     = form.label :quantity
     = form.text_field :quantity, :class => 'numeric'

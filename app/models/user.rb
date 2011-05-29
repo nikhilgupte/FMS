@@ -4,6 +4,9 @@ class User < ActiveRecord::Base
   validates :first_name, :last_name, :presence => true, :length => { :maximum => 50 }
   validates :email, :presence => true, :length => { :maximum => 50 }, :uniqueness => { :case_sensitive => false }
 
+  has_many :fragrances, :foreign_key => 'owner_id'
+  has_many :accords
+
   scope :with_prefix, lambda{|prefix| where(["prefix like ?", "#{prefix.downcase}%"]) }
 
   before_create :generate_prefix

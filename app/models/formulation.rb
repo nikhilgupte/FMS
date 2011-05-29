@@ -12,7 +12,7 @@ class Formulation < ActiveRecord::Base
 
   default_value_for :state, "draft"
 
-  accepts_nested_attributes_for :items
+  accepts_nested_attributes_for :items, :reject_if => Proc.new{ |o| %w(compound_id quantity).all?{|f| o[f].blank?} }
 
   def to_s
     "#{name} (##{code})"

@@ -2,6 +2,6 @@
   - content_for :sub_menu do
     %ul
       %li.current= link_to_unless_current 'Fragrances', fragrances_path
-      %li= link_to_unless_current 'Accords', "#"
+      %li= link_to_unless_current 'Accords', "#", :class => 'todo'
 
   = yield

@@ -16,13 +16,13 @@
     %td= @fragrance.origin_formula_id
   %tr
     %th Top Note
-    %td{ :colspan => 3 }= @fragrance.top_note || "N/A"
+    %td{ :colspan => 3 }= @fragrance.top_note.present? ? @fragrance.top_note : "N/A"
   %tr
     %th Middle Note
-    %td{ :colspan => 3 }= @fragrance.middle_note || "N/A"
+    %td{ :colspan => 3 }= @fragrance.middle_note.present? ? @fragrance.middle_note : "N/A"
   %tr
     %th Base Note
-    %td{ :colspan => 3 }= @fragrance.base_note || "N/A"
+    %td{ :colspan => 3 }= @fragrance.base_note.present? ? @fragrance.base_note : "N/A"
 
 %h2 Ingredients
 

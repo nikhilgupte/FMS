@@ -3,6 +3,13 @@ class FormulationItem < ActiveRecord::Base
   belongs_to :formulation
   belongs_to :compound, :polymorphic => true
 
+  attr_accessor :compound_name
+
+  validates :quantity, :presence => true, :numericality => { :greater_than => 0, :less_than => 1000 }
+  validates :compound, :presence => true
+
+  default_scope order(:id)
+
   def quantity_percentage
     quantity * 100.0 / formulation.total_quantity
   end

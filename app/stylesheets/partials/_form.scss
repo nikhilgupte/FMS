@@ -64,6 +64,10 @@ form {
 			float: left;
 			margin: 5px 15px;
 		}
+		input[type=text] {
+			width: 90%;
+			margin: 0;
+		}
 	}
 
   input,textarea,select {
@@ -111,7 +115,7 @@ textarea {
 div#errorExplanation { border:1px solid #c00;background-color:#fff!important;margin-bottom:10px;padding:0; height:100%;}
 div#errorExplanation p {padding-left:5px;margin:0}
 div#errorExplanation ul {padding:5px 10px;list-style: none;margin:0!important}
-div#errorExplanation li { padding-left:20px!important; margin:5px 0; background:url(../images/icons/error.gif) no-repeat left center;}
+div#errorExplanation li { padding-left:20px!important; margin:5px 0; background:url(/images/icon_error.gif) no-repeat left center;}
 div.errorExplanation h2 { font-size:11pt;color:#fff!important;margin:0 !important;padding:0;background-color:#c00 !important;}
 
 label.inline {
@@ -190,7 +194,7 @@ textarea.expandable:focus {
 	padding: 4px 10px!important;
 }
 
-.add_child, .buttons {
+.buttons {
 	@include clearfix;
 	padding: 0;
 	margin: 10px 0;
