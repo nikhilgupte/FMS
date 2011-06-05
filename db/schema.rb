@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110525152746) do
+ActiveRecord::Schema.define(:version => 20110605153426) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -89,17 +89,31 @@ ActiveRecord::Schema.define(:version => 20110525152746) do
     t.string   "code"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "tax_id"
+    t.integer  "custom_duty_id"
   end
 
+  add_index "ingredients", ["custom_duty_id"], :name => "index_ingredients_on_custom_duty_id"
+  add_index "ingredients", ["tax_id"], :name => "index_ingredients_on_tax_id"
   add_index "ingredients", ["code"], :name => "index_ingredients_on_code", :unique => true, :case_sensitive => false
+
+  create_table "levies", :force => true do |t|
+    t.string   "type",       :null => false
+    t.string   "name",       :null => false
+    t.float    "amount",     :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "levies", ["type", "name"], :name => "index_levies_on_type_and_name", :unique => true, :case_sensitive => false
 
   create_table "prices", :force => true do |t|
     t.integer  "priceable_id"
     t.string   "priceable_type"
     t.integer  "currency_id"
-    t.datetime "as_on",          :null => false
-    t.float    "value"
-    t.boolean  "latest",         :null => false
+    t.date     "as_on",                             :null => false
+    t.float    "amount"
+    t.boolean  "latest",         :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -131,6 +145,9 @@ ActiveRecord::Schema.define(:version => 20110525152746) do
   add_index "users", ["prefix"], :name => "index_users_on_prefix", :unique => true, :case_sensitive => false
 
   add_foreign_key "formulation_items", ["formulation_id"], "formulations", ["id"], :on_delete => :cascade, :name => "formulation_items_formulation_id_fkey"
+
+  add_foreign_key "ingredients", ["tax_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_tax_id_fkey"
+  add_foreign_key "ingredients", ["custom_duty_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_custom_duty_id_fkey"
 
   add_foreign_key "prices", ["currency_id"], "currencies", ["id"], :on_delete => :cascade, :name => "prices_currency_id_fkey"
 

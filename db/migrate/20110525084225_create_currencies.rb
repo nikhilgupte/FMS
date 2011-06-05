@@ -7,7 +7,7 @@ class CreateCurrencies < ActiveRecord::Migration
       t.timestamps
     end
     add_index :currencies, :name, :unique => true, :case_sensitive => false
-    add_index :currencies, :code, :unique => true, :case_sensitive => false
+    add_index :currencies, :code, :unique => true
   end
 
   def self.down

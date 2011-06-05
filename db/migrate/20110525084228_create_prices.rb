@@ -3,9 +3,9 @@ class CreatePrices < ActiveRecord::Migration
     create_table :prices do |t|
       t.references :priceable, :polymorphic => true
       t.references :currency
-      t.datetime :as_on, :null => false
-      t.float :value
-      t.boolean :latest, :null => false
+      t.date :as_on, :null => false
+      t.float :amount
+      #t.boolean :latest, :null => false, :default => false
 
       t.timestamps
     end

@@ -1,0 +1,2 @@
+class CustomDuty < Levy
+end
