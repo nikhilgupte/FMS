@@ -148,7 +148,7 @@ input.numeric {
 	text-align: right;
 }
 .remove {
-	float: right;
+	float: right!important;
 }
 
 textarea.expandable {
@@ -163,6 +163,7 @@ textarea.expandable:focus {
 }
 
 
+/*
 .primary {
 	@include my-border-radius(4px);
 	@include my-gradient(color-stops(#090, #070));
@@ -176,6 +177,7 @@ textarea.expandable:focus {
 		cursor: pointer;
 	}
 }
+*/
 .add_child a, .cancel {
 	@include my-border-radius(4px);
 	@include my-gradient(color-stops(#f5f5f5, #e5e5e5));
@@ -196,20 +198,74 @@ textarea.expandable:focus {
 
 .buttons {
 	@include clearfix;
-	padding: 0;
 	margin: 10px 0;
-  border: 0;
-	li {
+	padding: 0;
+	padding-bottom: 10px;
+	> li {
+		position: relative;
  		list-style: none!important;
 		float: left;
 		margin-right: 30px;
-		a {
-			margin-top: 4px;
+		> a, > input {
 			display: block;
+			@include my-border-radius(4px);
+			@include my-gradient(color-stops(#fff, #ccc));
+			border: 1px solid #aaa;
+			font-size: 10pt!important;
+			color: #000!important;
+			margin: 0!important;
+			text-decoration: none;
+			padding: 2px 10px!important;
+			&.primary {
+				@include my-gradient(color-stops(#0a0, #060));
+				border: 1px solid #070;
+				color: #fff!important;
+			}
+		}
+		> input {
+			padding: 3px 10px!important;
+		}
+
+		> ul {
+			display: none;
+		}
+		&.select > a {
+			padding-right: 20px!important;
+			background: #f9f9f9 url(http://cdn1.iconfinder.com/data/icons/silk2/bullet_arrow_down.png)  95% 50% no-repeat!important;
+		}
+		&:hover ul {
+			display: block;
+			position: fixed;
+			z-index: 100;
+			border: 1px solid #eee;
+			list-style: none;
+			background-color: #fff;
+			width: 300px;
+			margin: 0;
+			padding: 0;
+			@include my-box-shadow(#666, 2px, 2px);
+			li {
+				border-bottom: 1px solid #eee;
+				margin: 0;
+				padding: 0;
+				a {
+					padding: 4px;
+					text-decoration: none;
+					display: block;
+					color: #000!important;
+					&:hover {
+						background: #eee;
+					}
+				}
+			}
 		}
 	}
 }
 .add_child {
 		margin-top:0;
 		margin-bottom:20px;
+}
+
+label.inline {
+	display: inline!important;
 }

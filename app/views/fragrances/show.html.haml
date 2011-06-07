@@ -2,6 +2,11 @@
 
 %ul.buttons
   %li= link_to "Edit Fragrance", edit_fragrance_path, :class => 'primary'
+  %li.select
+    %a More
+    %ul
+      %li= link_to "View History", history_fragrance_path
+      %li= link_to "Copy", new_fragrance_path(:copy_of_id => params[:id], :as_on => params[:as_on])
 
 %table.form
   %tr
@@ -29,16 +34,18 @@
 %table.list.striped
   %thead
     %tr
-      %th Compound
-      %th{ :style => 'width: 100px;text-align: center;' } Quantity
-      %th{ :style => 'width: 100px;text-align: center;' } Cost
+      %th{ :style => 'width: 70%'} Compound
+      %th{ :style => 'text-align: center;', :colspan => 2 } Quantity
+      %th{ :style => 'text-align: center;', :colspan => 2 } Cost
   %tbody
-    - @fragrance.items.each do |item|
+    - @items.each do |item|
       %tr
         %td= item.compound
         %td.numeric
           = number_with_precision item.quantity, :precision => 3
-          == (#{number_to_percentage item.quantity_percentage})
+        %td.numeric.quiet
+          == #{number_to_percentage item.quantity_percentage}
         %td.numeric
           = number_to_currency 8292.80, :unit => 'Rs.'
-          == (#{number_to_percentage 12.7})
+        %td.numeric.quiet
+          == #{number_to_percentage 12.7}

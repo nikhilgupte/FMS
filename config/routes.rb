@@ -2,7 +2,11 @@ Fms::Application.routes.draw do
 
   root :to => "fragrances#index"
   resource :session, :only => [:new, :create, :destroy]
-  resources :fragrances
+  resources :fragrances do
+    member do
+      get :history
+    end
+  end
   resources :ingredients do
     collection do
       get 'autocomplete'

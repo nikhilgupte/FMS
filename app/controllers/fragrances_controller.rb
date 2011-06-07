@@ -5,8 +5,19 @@ class FragrancesController < ApplicationController
     @fragrances = Fragrance.all.paginate :page => params[:page], :per_page => 20
   end
 
+  def history
+    @fragrance = Fragrance.find params[:id]
+    @changes = (@fragrance.audits + @fragrance.associated_audits).sort_by(&:created_at).reverse
+  end
+
   def show
     @fragrance = Fragrance.find params[:id]
+    if params[:as_on].present?
+      @fragrance = @fragrance.as_on(params[:as_on])
+      @items = @fragrance.items
+    else
+      @items = @fragrance.items.current
+    end
   end
 
   def new

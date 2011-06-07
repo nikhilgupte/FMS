@@ -1,4 +1,9 @@
 %ol.inline_form
+  %li.remove
+    - unless form.object.new_record?
+      = form.check_box :_destroy
+      = form.label :_destroy, "Remove", :class => 'inline'
+    
   %li{ :style => 'width: 100px' }
     = form.label :compound_type, 'Type'
     - if form.object.new_record?

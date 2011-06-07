@@ -1,0 +1,27 @@
+- @page_title = "History of #{@fragrance}"
+
+%ul.buttons
+  %li= link_to "&laquo; Current Version".html_safe, @fragrance, :class => 'primary'
+
+%table.list
+  %thead
+    %tr
+      %th Date
+      %th By
+      %th Description
+  %tbody
+    - unless @changes.empty?
+      - @changes.group_by{|c| c.created_at.to_i}.each do |i, changes|
+        %tr
+          - date = changes.first.created_at
+          %td{ :rowspan => 1+changes.size, :title => date.to_s(:long) }
+            = link_to date.to_s(:short), fragrance_path(@fragrance, :as_on => date)
+          - changes.each do |change|
+            %tr
+              %td{ :style => 'border-left:1px solid #eee' }= change.user
+              %td
+                %strong= display_audit_action change
+                = change.auditable.revision_at(change.created_at + 1)
+    - else
+      %tr
+        %td.empty{ :colspan => 3 } History Not Available

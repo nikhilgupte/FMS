@@ -40,7 +40,6 @@
         source: "#{autocomplete_ingredients_path}",
         minLength: 2,
         select: function( event, ui ) {
-          //alert('id: ' + ui.item.id + ' value: ' + ui.item.value);
           $(this).next('.compound_id').val(ui.item.id);
         }
       });

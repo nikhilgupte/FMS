@@ -1,6 +1,7 @@
 class FormulationItem < ActiveRecord::Base
   include SoftDeletable
-  belongs_to :formulation
+
+  belongs_to :formulation, :touch => true
   belongs_to :compound, :polymorphic => true
 
   attr_accessor :compound_name
@@ -8,10 +9,19 @@ class FormulationItem < ActiveRecord::Base
   validates :quantity, :presence => true, :numericality => { :greater_than => 0, :less_than => 1000 }
   validates :compound, :presence => true
 
+  acts_as_audited :associated_with => :formulation
+
   default_scope order(:id)
+  scope :as_on, lambda { |date| where("formulation_items.created_at <= :date and (formulation_items.deleted_at is null or formulation_items.deleted_at > :date)", { :date => date }) }
+  scope :current, lambda { as_on(Time.now + 1) }
+  scope :active, where(:deleted_at => nil)
 
   def quantity_percentage
     quantity * 100.0 / formulation.total_quantity
+  end
+
+  def to_s
+    [compound.to_s, "#{quantity} gms"].join(' - ')
   end
 
   class << self

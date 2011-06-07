@@ -7,7 +7,7 @@ class Ingredient < ActiveRecord::Base
   auto_strip :name, :code
 
   scope :having_price, where("ingredients.latest_price_id is not null")
-  scope :with_name_or_code, lambda { |term| having_price.where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
+  scope :with_name_or_code, lambda { |term| where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
 
   def gross_price(currency_code)
     latest_price = prices.in(currency_code).last
