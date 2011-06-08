@@ -1,0 +1,20 @@
+%h3 Ingredients
+
+%table.list.striped
+  %thead
+    %tr
+      %th{ :style => 'width: 70%'} Compound
+      %th{ :style => 'text-align: center;', :colspan => 2 } Quantity
+      %th{ :style => 'text-align: center;', :colspan => 2 } Cost
+  %tbody
+    - @items.each do |item|
+      %tr
+        %td= item.compound
+        %td.numeric
+          = number_with_precision item.quantity, :precision => 3
+        %td.numeric.quiet
+          == #{number_to_percentage item.quantity_percentage}
+        %td.numeric
+          = number_to_currency item.price(currency), :unit => currency.symbol
+        %td.numeric.quiet
+          == #{number_to_percentage 12.7}

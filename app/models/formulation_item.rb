@@ -1,6 +1,8 @@
 class FormulationItem < ActiveRecord::Base
   include SoftDeletable
 
+  UNIT_WEIGHT = 1
+
   belongs_to :formulation, :touch => true
   belongs_to :compound, :polymorphic => true
 
@@ -22,6 +24,10 @@ class FormulationItem < ActiveRecord::Base
 
   def to_s
     [compound.to_s, "#{quantity} gms"].join(' - ')
+  end
+
+  def price(currency_code)
+    compound.unit_price(currency_code) * UNIT_WEIGHT
   end
 
   class << self
