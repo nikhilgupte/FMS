@@ -28,12 +28,13 @@ class FormulationItem < ActiveRecord::Base
     def import_from_csv(file)
       CSV.read(file, :headers => true).each do |row|
         begin
-          fragrance = Fragrance.find_by_origin_formula_id!(row['FragranceId'])
+          formulation_id = row['FragranceId'] || row['AccordId']
+          formulation = Formulation.find_by_origin_formula_id!(formulation_id)
           params = {
             :compound => Ingredient.find_by_code(row['CompId']) || Accord.find_by_origin_formula_id!(row['CompId']),
             :quantity => row['CompQty']
           }
-          fragrance.items.create_or_update(params)
+          formulation.items.create_or_update(params)
         rescue
           nil
         end

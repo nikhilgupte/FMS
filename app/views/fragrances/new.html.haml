@@ -1,3 +1,4 @@
 - @page_title = "New Fragrance"
 
-= render 'form'
+= form_for @fragrance do |form|
+  = render :partial => 'formulations/form', :object => form 

@@ -3,21 +3,26 @@
     - unless form.object.new_record?
       = form.check_box :_destroy
       = form.label :_destroy, "Remove", :class => 'inline'
+    - else
+      %a{ :href => '#' } Remove
     
   %li{ :style => 'width: 100px' }
     = form.label :compound_type, 'Type'
-    - if form.object.new_record?
+
+    - unless form.object.compound.present?
       = form.select :compound_type, %w(Ingredient Accord)
     - else
       = form.object.compound_type
+      = form.hidden_field :compound_type
   %li{ :style => 'width: 400px' }
     = form.label :compound_name, "Compound"
-    - if form.object.new_record?
+    - unless form.object.compound.present?
       = form.text_field :compound_name, :class => 'compound'
       = form.hidden_field :compound_id, :class => 'compound_id'
       .tip Enter the name or code
     - else
       = form.object.compound
+      = form.hidden_field :compound_id
   %li
     = form.label :quantity
     = form.text_field :quantity, :class => 'numeric'

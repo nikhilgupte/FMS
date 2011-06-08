@@ -3,7 +3,6 @@ $(function() {
   $('textarea.elastic').elastic();
   $('form.todo').submit(todo);
   $('a.todo').click(todo);
-  $("div.flash a").click(function() { $(this).parents('.flash').remove(); return false });
   $('<div id="loading">Please wait...</div>')
         .ajaxStart(function() {$(this).show();})
         .ajaxStop(function() {$(this).hide();})
@@ -15,6 +14,10 @@ $(function() {
     } else {
       $(this).parents('ol').removeClass('removed');
     }
+  });
+  $('body').delegate(".remove a", "click", function() {
+    $(this).parents('ol').fadeOut('slow', function() { $(this).remove()});
+    return false;
   });
 });
 

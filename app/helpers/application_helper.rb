@@ -14,7 +14,8 @@ module ApplicationHelper
 
   def display_audit_action(change)
     case change.action
-    when 'create' then "Added"
+    when 'create' then 
+      change.association.present? ? "Added" : "Created"
     when 'update' then
       begin
         change.auditable.revision(change.version).deleted? ? "Deleted" : "Updated"

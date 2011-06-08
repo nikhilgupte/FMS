@@ -7,7 +7,7 @@ class FragrancesController < ApplicationController
 
   def history
     @fragrance = Fragrance.find params[:id]
-    @changes = (@fragrance.audits + @fragrance.associated_audits).sort_by(&:created_at).reverse
+    @changes = @fragrance.changes
   end
 
   def show
@@ -15,14 +15,25 @@ class FragrancesController < ApplicationController
     if params[:as_on].present?
       @fragrance = @fragrance.as_on(params[:as_on])
       @items = @fragrance.items
+      flash.now[:notice] = "You are viewing an older version (#{Time.parse(params[:as_on]).to_s(:long)}) of this fragrance."
     else
       @items = @fragrance.items.current
     end
   end
 
   def new
-    @fragrance = Fragrance.new
-    3.times{ @fragrance.items.build }
+    if params[:copy_of_id].present?
+      original = Fragrance.find(params[:copy_of_id])
+      @fragrance = original.copy(params[:as_on])
+      flash.now[:notice] = "Copied from #{original}"
+      if params[:as_on].present?
+        flash.now[:notice] << " version (#{Time.parse(params[:as_on]).to_s(:long)})"
+      end
+    else
+      @fragrance = Fragrance.new
+      3.times{ @fragrance.items.build }
+    end
+    @fragrance.product_year = Time.now.year
   end
 
   def create

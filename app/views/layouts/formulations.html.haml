@@ -1,7 +1,7 @@
 = inside_layout 'application' do
   - content_for :sub_menu do
     %ul
-      %li.current= link_to_unless_current 'Fragrances', fragrances_path
-      %li= link_to_unless_current 'Accords', "#", :class => 'todo'
+      %li{:class => controller_name == 'fragrances' ? 'current' : nil}= link_to_unless_current 'Fragrances', fragrances_path
+      %li{:class => controller_name == 'accords' ? 'current' : nil}= link_to_unless_current 'Accords', accords_path
 
   = yield

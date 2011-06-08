@@ -7,6 +7,12 @@ Fms::Application.routes.draw do
       get :history
     end
   end
+  resources :accords do
+    member do
+      get :history
+    end
+  end
+
   resources :ingredients do
     collection do
       get 'autocomplete'

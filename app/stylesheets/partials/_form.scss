@@ -197,7 +197,8 @@ textarea.expandable:focus {
 }
 
 .buttons {
-	@include clearfix;
+	//@include clearfix;
+	height: 30px;
 	margin: 10px 0;
 	padding: 0;
 	padding-bottom: 10px;
@@ -234,16 +235,17 @@ textarea.expandable:focus {
 			background: #f9f9f9 url(http://cdn1.iconfinder.com/data/icons/silk2/bullet_arrow_down.png)  95% 50% no-repeat!important;
 		}
 		&:hover ul {
+			@include my-border-radius(4px, 0);
 			display: block;
 			position: fixed;
 			z-index: 100;
-			border: 1px solid #eee;
+			border: 1px solid #aaa;
 			list-style: none;
-			background-color: #fff;
+			background-color: #f9f9f9;
 			width: 300px;
 			margin: 0;
 			padding: 0;
-			@include my-box-shadow(#666, 2px, 2px);
+			@include my-box-shadow(#aaa, 1px, 3px);
 			li {
 				border-bottom: 1px solid #eee;
 				margin: 0;

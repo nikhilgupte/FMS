@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   validates :email, :presence => true, :length => { :maximum => 50 }, :uniqueness => { :case_sensitive => false }
 
   has_many :fragrances, :foreign_key => 'owner_id'
-  has_many :accords
+  has_many :accords, :foreign_key => 'owner_id'
 
   scope :with_prefix, lambda{|prefix| where(["prefix like ?", "#{prefix.downcase}%"]) }
 

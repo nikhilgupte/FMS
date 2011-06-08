@@ -1,36 +1,36 @@
-- @page_title = "Fragrance: #{@fragrance}"
+- @page_title = "Accord: #{@accord}"
 
 %ul.buttons
   - unless params[:as_on].present?
-    %li= link_to "Edit Fragrance", edit_fragrance_path, :class => 'primary'
+    %li= link_to "Edit Accord", edit_accord_path, :class => 'primary'
   - else
-    %li= link_to "&laquo; Current Version".html_safe, fragrance_path, :class => 'primary'
+    %li= link_to "&laquo; Current Version".html_safe, accord_path, :class => 'primary'
   %li.select
     %a More
     %ul
-      %li= link_to "View History", history_fragrance_path
-      %li= link_to "Copy", new_fragrance_path(:copy_of_id => params[:id], :as_on => params[:as_on])
+      %li= link_to "View History", history_accord_path
+      %li= link_to "Copy", new_accord_path(:copy_of_id => params[:id], :as_on => params[:as_on])
 
 %table.form
   %tr
     %th Owner
-    %td= @fragrance.owner
+    %td= @accord.owner
     %th State
-    %td= @fragrance.state
+    %td= @accord.state
   %tr
     %th Product Year
-    %td= @fragrance.product_year
+    %td= @accord.product_year
     %th Origin Formula ID
-    %td= @fragrance.origin_formula_id
+    %td= @accord.origin_formula_id
   %tr
     %th Top Note
-    %td{ :colspan => 3 }= @fragrance.top_note.present? ? @fragrance.top_note : "N/A"
+    %td{ :colspan => 3 }= @accord.top_note.present? ? @accord.top_note : "N/A"
   %tr
     %th Middle Note
-    %td{ :colspan => 3 }= @fragrance.middle_note.present? ? @fragrance.middle_note : "N/A"
+    %td{ :colspan => 3 }= @accord.middle_note.present? ? @accord.middle_note : "N/A"
   %tr
     %th Base Note
-    %td{ :colspan => 3 }= @fragrance.base_note.present? ? @fragrance.base_note : "N/A"
+    %td{ :colspan => 3 }= @accord.base_note.present? ? @accord.base_note : "N/A"
 
 %h2 Ingredients
 
