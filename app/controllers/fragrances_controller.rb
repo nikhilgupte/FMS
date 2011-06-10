@@ -11,7 +11,7 @@ class FragrancesController < ApplicationController
   end
 
   def show
-    @fragrance = Fragrance.find params[:id]
+    @fragrance = Fragrance.find params[:id], :include => [:items => :compound]
     if params[:as_on].present?
       @fragrance = @fragrance.as_on(params[:as_on])
       @items = @fragrance.items

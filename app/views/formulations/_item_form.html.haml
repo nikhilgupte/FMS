@@ -10,7 +10,7 @@
     = form.label :compound_type, 'Type'
 
     - unless form.object.compound.present?
-      = form.select :compound_type, %w(Ingredient Accord)
+      = form.select :compound_type, %w(Ingredient Accord), {}, :class => :compound_type
     - else
       = form.object.compound_type
       = form.hidden_field :compound_type

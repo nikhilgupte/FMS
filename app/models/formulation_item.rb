@@ -5,11 +5,14 @@ class FormulationItem < ActiveRecord::Base
 
   belongs_to :formulation, :touch => true
   belongs_to :compound, :polymorphic => true
+  has_many :constituent_ingredients, :class_name => 'FormulationIngredient'
 
   attr_accessor :compound_name
 
   validates :quantity, :presence => true, :numericality => { :greater_than => 0, :less_than => 1000 }
   validates :compound, :presence => true
+
+  after_save :explode!
 
   acts_as_audited :associated_with => :formulation
 
@@ -22,12 +25,17 @@ class FormulationItem < ActiveRecord::Base
     quantity * 100.0 / formulation.total_quantity
   end
 
+  def price_percentage
+    price(:inr) * 100 / formulation.total_price(:inr)
+  end
+
   def to_s
     [compound.to_s, "#{quantity} gms"].join(' - ')
   end
 
   def price(currency_code)
-    compound.unit_price(currency_code) * UNIT_WEIGHT
+    #compound.unit_price(currency_code) * UNIT_WEIGHT
+    constituent_ingredients.entries.sum{|i| i.price(currency_code)}
   end
 
   class << self
@@ -57,5 +65,14 @@ class FormulationItem < ActiveRecord::Base
     end
   end
 
-
+  def explode!
+    constituent_ingredients.delete_all    
+    if compound.is_a?(Ingredient)
+      constituent_ingredients.create! :ingredient => compound, :quantity => quantity
+    else
+      compound.constituent_ingredients.each do |ci|
+        constituent_ingredients.create! :ingredient => ci.ingredient, :quantity => (quantity / compound.net_weight) * ci.quantity
+      end
+    end
+  end
 end

@@ -13,20 +13,21 @@ class Ingredient < ActiveRecord::Base
 
   def gross_price(currency_code, as_on = Date.today)
     currency_code = currency_code.to_s.upcase
-    price = price(currency_code, as_on)
+    price = prices.last
+    return amount = price.to(currency_code)
     if currency_code == 'INR'
-      if price.inr?
-        amount = price.amount * (1 + (tax.try(:amount) || 0))
+      if price.in?(:inr)
+        amount = price.to(:inr) * (1 + (tax.try(:amount) || 0))
       else
-        amount = price.amount * (1 + (custom_duty.try(:amount) || 0))
+        amount = price.to(:inr) * (1 + (custom_duty.try(:amount) || 0))
       end
     else
-      amount = price.send("to_#{currency_code}")
+      amount = price.to(currency_code)
     end
   end
 
   def unit_price(currency_code)
-    gross_price(currency_code) / UNIT_WEIGHT rescue '?'
+    gross_price(currency_code) / UNIT_WEIGHT rescue nil
   end
 
   class << self
@@ -34,26 +35,23 @@ class Ingredient < ActiveRecord::Base
       where("lower(code) = ?", code.strip.downcase).first
     end
     
-    def import_prices(file)
+    def import_prices(file, as_on = nil)
       CSV.read(file, :headers => true, :header_converters => :downcase).each do |row|
         if(ingredient = Ingredient.find_by_code(row['code'])).present?
-          params = { :inr => row['inr'], :usd => row['usd'], :eur => row['eur'] }
-          as_on = row['date'] || row['as_on']
-          params.keys.each do |currency|
-            if(amount = params[currency]).present?
-              ingredient.create_or_update_price(:currency_code => currency, :amount => amount, :as_on => as_on)
-            end
-          end
+          prices = { :inr => row['inr'], :usd => row['usd'], :eur => row['eur'] }
+          as_on = row['date'] || row['as_on'] || Date.today
+          ingredient.create_or_update_prices(as_on, prices)
         end
       end
     end
   end
 
-  def create_or_update_price(params)
-    if(price = prices.in(params[:currency_code]).where(:as_on => params[:as_on]).first).present?
-      price.update_attribute(:amount, params[:amount])
-    else
-      prices.in(params[:currency_code]).create! :amount => params[:amount], :as_on => params[:as_on]  
+  def create_or_update_prices(as_on, price_values)
+    price = prices.where(:as_on => as_on).first || prices.create(:as_on => as_on)
+    price_values.each do |currency_code, amount|
+      currency_code = currency_code.to_s.upcase
+      price.currencies.where(:currency_code => currency_code).delete_all
+      price.currencies.create(:currency_code => currency_code, :amount => amount) if amount.present?
     end
   end
 
@@ -61,12 +59,4 @@ class Ingredient < ActiveRecord::Base
     "#{name} (##{code})"
   end
 
-  def price(currency_code, as_on = Date.today)
-    currency_codes = [currency_code] + (Price::SUPPORTED_CURRENCIES - [currency_code])
-    currency_codes.each do |currency_code|
-      price = prices.in(currency_code).last
-      return price if price.present?
-    end
-    nil
-  end
 end

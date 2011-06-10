@@ -8,6 +8,7 @@ class Formulation < ActiveRecord::Base
   belongs_to :owner, :class_name => 'User'
   has_many :items, :class_name => 'FormulationItem', :dependent => :delete_all, :conditions => { :deleted_at => nil }
   has_many :all_items, :class_name => 'FormulationItem', :readonly => true
+  has_many :constituent_ingredients, :through => :items
 
   validates :name, :product_year, :presence => true
   validates :state, :inclusion => STATES
@@ -25,6 +26,10 @@ class Formulation < ActiveRecord::Base
 
   def to_s
     "#{name} (##{code})"
+  end
+
+  def net_weight
+    items.sum(:quantity)
   end
 
   def as_on(date)
@@ -63,7 +68,15 @@ class Formulation < ActiveRecord::Base
   end
 
   def total_quantity
-    items.sum(:quantity)
+    @total_quantity ||= items.sum(:quantity)
+  end
+
+  def total_price(currency_code)
+    @total_price ||= items.entries.sum{|i| i.price(currency_code)}
+  end
+
+  def unit_price(currency_code)
+    total_price(currency_code) * 1000 / total_quantity
   end
 
   private 

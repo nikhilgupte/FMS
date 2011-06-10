@@ -11,6 +11,9 @@ Fms::Application.routes.draw do
     member do
       get :history
     end
+    collection do
+      get 'autocomplete'
+    end
   end
 
   resources :ingredients do

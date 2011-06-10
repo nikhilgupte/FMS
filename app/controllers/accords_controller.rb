@@ -57,4 +57,8 @@ class AccordsController < ApplicationController
       render :edit
     end
   end
+
+  def autocomplete
+    render :json => Accord.with_name_or_code(params[:term]).limit(10).collect{|i| { :id => i.id, :value => i.to_s } }
+  end
 end

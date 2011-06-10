@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110608112052) do
+ActiveRecord::Schema.define(:version => 20110610111334) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -43,6 +43,14 @@ ActiveRecord::Schema.define(:version => 20110608112052) do
 
   add_index "currencies", ["code"], :name => "index_currencies_on_code", :unique => true, :case_sensitive => false
   add_index "currencies", ["name"], :name => "index_currencies_on_name", :unique => true, :case_sensitive => false
+
+  create_table "formulation_ingredients", :force => true do |t|
+    t.integer  "formulation_item_id"
+    t.integer  "ingredient_id"
+    t.float    "quantity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "formulation_items", :force => true do |t|
     t.integer  "formulation_id", :null => false
@@ -108,18 +116,25 @@ ActiveRecord::Schema.define(:version => 20110608112052) do
 
   add_index "levies", ["type", "name"], :name => "index_levies_on_type_and_name", :unique => true, :case_sensitive => false
 
+  create_table "price_currencies", :force => true do |t|
+    t.integer  "price_id"
+    t.string   "currency_code"
+    t.float    "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "price_currencies", ["price_id", "currency_code"], :name => "index_price_currencies_on_price_id_and_currency_code", :unique => true
+
   create_table "prices", :force => true do |t|
     t.integer  "priceable_id"
     t.string   "priceable_type"
-    t.string   "currency_code"
     t.date     "as_on",                             :null => false
-    t.float    "amount"
     t.boolean  "latest",         :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "prices", ["currency_code"], :name => "index_prices_on_currency_code"
   add_index "prices", ["priceable_type", "priceable_id"], :name => "index_prices_on_priceable_type_and_priceable_id"
 
   create_table "users", :force => true do |t|
@@ -148,5 +163,7 @@ ActiveRecord::Schema.define(:version => 20110608112052) do
 
   add_foreign_key "ingredients", ["tax_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_tax_id_fkey"
   add_foreign_key "ingredients", ["custom_duty_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_custom_duty_id_fkey"
+
+  add_foreign_key "price_currencies", ["price_id"], "prices", ["id"], :on_delete => :cascade, :name => "price_currencies_price_id_fkey"
 
 end

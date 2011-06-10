@@ -22,7 +22,7 @@
   %legend Ingredients
   = form.fields_for :items, form.object.items do |item_form|
     = render :partial => 'formulations/item_form', :locals => { :form => item_form }
-.add_child= add_nested_fields_for(form, :items, 'items', { :label => '+ Add Item', :partial => 'formulations/item_form', :object => FormulationItem.new, :callback => 'itemAdded()' })
+.add_child= add_nested_fields_for(form, :items, 'items', { :label => '+ Add Item', :partial => 'formulations/item_form', :object => FormulationItem.new })
 %fieldset
   %ol.buttons
     %li= form.submit nil, :class => :primary
@@ -30,15 +30,19 @@
 
 - content_for :tail do
   :javascript
-    function itemAdded() {
-      $( ".compound" ).autocomplete({
-        source: "#{autocomplete_ingredients_path}",
-        minLength: 2,
-        select: function( event, ui ) {
-          $(this).next('.compound_id').val(ui.item.id);
-        }
-      });
-    }
     $(function() {
-      itemAdded();
+      $("body").delegate(".compound_type", 'change', function() {
+        $(this).parents('.inline_form').find('.compound').val('').focus();
+      });
+      $("body").delegate(".compound", 'focus', function() {
+        var url = $(this).parents('.inline_form').find('.compound_type').val() == 'Ingredient' ? '#{autocomplete_ingredients_path}' : '#{autocomplete_accords_path}';
+        $(this).autocomplete({
+          source: url,
+          minLength: 2,
+          select: function( event, ui ) {
+            $(this).next('.compound_id').val(ui.item.id);
+          }
+        });
+      });
+
     });

@@ -11,25 +11,5 @@
       %li= link_to "View History", history_fragrance_path
       %li= link_to "Copy", new_fragrance_path(:copy_of_id => params[:id], :as_on => params[:as_on])
 
-%table.form
-  %tr
-    %th Owner
-    %td= @fragrance.owner
-    %th State
-    %td= @fragrance.state
-  %tr
-    %th Product Year
-    %td= @fragrance.product_year
-    %th Origin Formula ID
-    %td= @fragrance.origin_formula_id
-  %tr
-    %th Top Note
-    %td{ :colspan => 3 }= @fragrance.top_note.present? ? @fragrance.top_note : "N/A"
-  %tr
-    %th Middle Note
-    %td{ :colspan => 3 }= @fragrance.middle_note.present? ? @fragrance.middle_note : "N/A"
-  %tr
-    %th Base Note
-    %td{ :colspan => 3 }= @fragrance.base_note.present? ? @fragrance.base_note : "N/A"
-
+= render :partial => 'formulations/show', :locals => { :formulation => @fragrance }
 = render 'formulations/items'

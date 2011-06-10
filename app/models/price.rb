@@ -3,35 +3,30 @@ class Price < ActiveRecord::Base
   SUPPORTED_CURRENCIES = %w(INR USD EUR)
 
   belongs_to :priceable, :polymorphic => true
+  has_many :currencies, :class_name => 'PriceCurrency'
 
   default_scope order(:as_on)
 
-  SUPPORTED_CURRENCIES.each do |supported_currency|
-    supported_currency.downcase!
-    define_method "#{supported_currency}?" do
-      self.currency_code.downcase == supported_currency.downcase
-    end
-
-    define_method "to_#{supported_currency}" do
-      if self.send("#{supported_currency}?")
-        amount
-      else
-        target_currency_rate = Currency.find_by_code!(supported_currency).prices.last.to_inr
-        current_currency_rate = currency.prices.last.to_inr
-        amount * current_currency_rate / target_currency_rate
-      end
-    end
+  def in?(currency_code)
+    currency_code = currency_code.to_s.upcase
+    currencies.where(:currency_code => currency_code).exists?
   end
 
-  def currency
-    Currency.find_by_code! currency_code
+  def in(currency_code)
+    currency_code = currency_code.to_s.upcase
+    currencies.where(:currency_code => currency_code).last.try(:amount)
   end
 
-  private
-
-  class << self
-    def in(currency_code)
-      where(:currency_code => currency_code.to_s.upcase)
+  def to(currency_code)
+    currency_code = currency_code.to_s.upcase
+    if in?(currency_code)
+      amount = currencies.where(:currency_code => currency_code).last.amount
+    else
+      target_currency_rate = Currency.find_by_code!(currency_code).prices.last.in(:inr)
+      available_currency = SUPPORTED_CURRENCIES.find{|c| self.in?(c)}
+      available_currency_rate = Currency.find_by_code!(available_currency).prices.last.in(:inr)
+       available_amount = currencies.where(:currency_code => available_currency).last.amount
+       amount = available_amount * available_currency_rate / target_currency_rate
     end
   end
 

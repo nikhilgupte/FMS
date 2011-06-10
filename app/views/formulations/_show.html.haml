@@ -1,0 +1,30 @@
+%table.form
+  %tr
+    %th Owner
+    %td= formulation.owner
+    %th State
+    %td= formulation.state
+  %tr
+    %th Product Year
+    %td= formulation.product_year
+    %th Origin Formula ID
+    %td= formulation.origin_formula_id || "N/A"
+  %tr
+    %th Top Note
+    %td{ :colspan => 3 }= formulation.top_note.present? ? formulation.top_note : "N/A"
+  %tr
+    %th Middle Note
+    %td{ :colspan => 3 }= formulation.middle_note.present? ? formulation.middle_note : "N/A"
+  %tr
+    %th Base Note
+    %td{ :colspan => 3 }= formulation.base_note.present? ? formulation.base_note : "N/A"
+  %tr
+    %th Net Weight
+    %td{ :colspan => 3 }== #{number_with_precision formulation.net_weight, :precision => 3} grams
+  %tr
+    %th Price
+    %td{ :colspan => 3 }= number_to_currency formulation.total_price(current_currency.code), :unit => current_currency.symbol
+  %tr
+    %th Unit Price
+    %td{ :colspan => 3 }== #{number_to_currency(formulation.unit_price(current_currency.code), :unit => current_currency.symbol)}/kg
+

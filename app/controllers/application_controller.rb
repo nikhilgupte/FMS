@@ -2,9 +2,9 @@ class ApplicationController < ActionController::Base
   before_filter :require_user, :set_time_zone
   protect_from_forgery
 
-  helper_method :current_user, :logged_in?, :currency
+  helper_method :current_user, :logged_in?, :current_currency
 
-  def currency
+  def current_currency
     Currency.find_by_code 'INR' 
   end
 

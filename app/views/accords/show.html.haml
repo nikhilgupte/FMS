@@ -11,25 +11,5 @@
       %li= link_to "View History", history_accord_path
       %li= link_to "Copy", new_accord_path(:copy_of_id => params[:id], :as_on => params[:as_on])
 
-%table.form
-  %tr
-    %th Owner
-    %td= @accord.owner
-    %th State
-    %td= @accord.state
-  %tr
-    %th Product Year
-    %td= @accord.product_year
-    %th Origin Formula ID
-    %td= @accord.origin_formula_id
-  %tr
-    %th Top Note
-    %td{ :colspan => 3 }= @accord.top_note.present? ? @accord.top_note : "N/A"
-  %tr
-    %th Middle Note
-    %td{ :colspan => 3 }= @accord.middle_note.present? ? @accord.middle_note : "N/A"
-  %tr
-    %th Base Note
-    %td{ :colspan => 3 }= @accord.base_note.present? ? @accord.base_note : "N/A"
-
+= render :partial => 'formulations/show', :locals => { :formulation => @accord }
 = render 'formulations/items'
