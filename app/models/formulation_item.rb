@@ -35,8 +35,9 @@ class FormulationItem < ActiveRecord::Base
 
   def price(currency_code)
     @price ||= begin
-      ratio = compound.is_a?(Ingredient) ? quantity : quantity/compound.net_weight
-      constituent_ingredients.entries.sum{|i| i.ingredient.unit_price(currency_code) * i.quantity * ratio  }
+      #ratio = compound.is_a?(Ingredient) ? quantity : quantity/compound.net_weight
+      #constituent_ingredients.entries.sum{|i| i.ingredient.unit_price(currency_code) * i.quantity * ratio  }
+      quantity * compound.unit_price(currency_code) rescue nil
     end
   end
 

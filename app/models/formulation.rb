@@ -83,10 +83,12 @@ class Formulation < ActiveRecord::Base
     @total_price ||= begin
       items.entries.sum{|i| i.price(currency_code)}
     end
+  rescue
+    nil
   end
 
   def unit_price(currency_code)
-    total_price(currency_code) * 1000 / total_quantity
+    total_price(currency_code) * 1000 / total_quantity rescue nil
   end
 
   def current
