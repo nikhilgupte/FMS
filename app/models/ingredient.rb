@@ -12,10 +12,10 @@ class Ingredient < ActiveRecord::Base
   scope :with_name_or_code, lambda { |term| where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
 
   def gross_price(currency_code, as_on = Date.today)
-    currency_code = currency_code.to_s.upcase
+    currency_code = currency_code.to_s.downcase.to_s
     price = prices.last
-    return amount = price.to(currency_code)
-    if currency_code == 'INR'
+    #return amount = price.to(currency_code)
+    if currency_code == :inr
       if price.in?(:inr)
         amount = price.to(:inr) * (1 + (tax.try(:amount) || 0))
       else
@@ -40,19 +40,16 @@ class Ingredient < ActiveRecord::Base
         if(ingredient = Ingredient.find_by_code(row['code'])).present?
           prices = { :inr => row['inr'], :usd => row['usd'], :eur => row['eur'] }
           as_on = row['date'] || row['as_on'] || Date.today
-          ingredient.create_or_update_prices(as_on, prices)
+          ingredient.create_or_update_price(as_on, prices)
         end
       end
     end
   end
 
-  def create_or_update_prices(as_on, price_values)
-    price = prices.where(:as_on => as_on).first || prices.create(:as_on => as_on)
-    price_values.each do |currency_code, amount|
-      currency_code = currency_code.to_s.upcase
-      price.currencies.where(:currency_code => currency_code).delete_all
-      price.currencies.create(:currency_code => currency_code, :amount => amount) if amount.present?
-    end
+  def create_or_update_price(as_on, price_values)
+    price = prices.where(:as_on => as_on).first || prices.build(:as_on => as_on)
+    price.attributes = price_values.merge(:calculated => false)
+    price.save!
   end
 
   def to_s

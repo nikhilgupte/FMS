@@ -5,7 +5,7 @@
     %tr
       %th{ :style => 'width: 70%'} Compound
       %th{ :style => 'text-align: center;', :colspan => 2 } Quantity (grams)
-      %th{ :style => 'text-align: center;', :colspan => 2 } Cost
+      %th{ :style => 'text-align: center;', :colspan => 2 }== Price (#{current_currency.code})
   %tbody
     - @items.each do |item|
       %tr
@@ -15,6 +15,6 @@
         %td.numeric.quiet
           == #{number_to_percentage item.quantity_percentage, :precision => 2}
         %td.numeric
-          = number_to_currency item.price(current_currency.code), :unit => current_currency.symbol
+          = number_with_precision item.price(current_currency.code), :precision => 2
         %td.numeric.quiet
-          == #{number_to_percentage item.price_percentage, :precision => 2}
+          == #{number_to_percentage item.price_percentage(current_currency.code), :precision => 2}

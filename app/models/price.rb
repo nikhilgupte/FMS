@@ -8,25 +8,24 @@ class Price < ActiveRecord::Base
   default_scope order(:as_on)
 
   def in?(currency_code)
-    currency_code = currency_code.to_s.upcase
-    currencies.where(:currency_code => currency_code).exists?
+    self.send("#{currency_code.to_s.downcase}?")
   end
 
-  def in(currency_code)
-    currency_code = currency_code.to_s.upcase
-    currencies.where(:currency_code => currency_code).last.try(:amount)
+  def amount(currency_code)
+    self.send("#{currency_code.to_s.downcase}")
   end
 
   def to(currency_code)
-    currency_code = currency_code.to_s.upcase
     if in?(currency_code)
-      amount = currencies.where(:currency_code => currency_code).last.amount
+      return amount(currency_code)
     else
-      target_currency_rate = Currency.find_by_code!(currency_code).prices.last.in(:inr)
-      available_currency = SUPPORTED_CURRENCIES.find{|c| self.in?(c)}
-      available_currency_rate = Currency.find_by_code!(available_currency).prices.last.in(:inr)
-       available_amount = currencies.where(:currency_code => available_currency).last.amount
-       amount = available_amount * available_currency_rate / target_currency_rate
+      target_currency_rate = Currency.find_by_code!(currency_code).prices.last.inr
+      SUPPORTED_CURRENCIES.each do |supported_currency|
+        if in?(supported_currency)
+          supported_currency_rate = Currency.find_by_code!(supported_currency).prices.last.inr
+          return amount(supported_currency) * supported_currency_rate / target_currency_rate
+        end
+      end
     end
   end
 

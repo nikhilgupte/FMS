@@ -7,6 +7,8 @@ class CreateFormulationIngredients < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :formulation_ingredients, :formulation_item_id
+    add_foreign_key :formulation_ingredients, :formulation_item_id, :formulation_items, :id, :on_delete => :cascade
   end
 
   def self.down

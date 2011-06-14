@@ -52,6 +52,8 @@ ActiveRecord::Schema.define(:version => 20110610111334) do
     t.datetime "updated_at"
   end
 
+  add_index "formulation_ingredients", ["formulation_item_id"], :name => "index_formulation_ingredients_on_formulation_item_id"
+
   create_table "formulation_items", :force => true do |t|
     t.integer  "formulation_id", :null => false
     t.integer  "compound_id",    :null => false
@@ -129,7 +131,11 @@ ActiveRecord::Schema.define(:version => 20110610111334) do
   create_table "prices", :force => true do |t|
     t.integer  "priceable_id"
     t.string   "priceable_type"
+    t.float    "inr"
+    t.float    "usd"
+    t.float    "eur"
     t.date     "as_on",                             :null => false
+    t.boolean  "calculated",                        :null => false
     t.boolean  "latest",         :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -159,11 +165,11 @@ ActiveRecord::Schema.define(:version => 20110610111334) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true, :case_sensitive => false
   add_index "users", ["prefix"], :name => "index_users_on_prefix", :unique => true, :case_sensitive => false
 
+  add_foreign_key "formulation_ingredients", ["formulation_item_id"], "formulation_items", ["id"], :on_delete => :cascade, :name => "formulation_ingredients_formulation_item_id_fkey"
+
   add_foreign_key "formulation_items", ["formulation_id"], "formulations", ["id"], :on_delete => :cascade, :name => "formulation_items_formulation_id_fkey"
 
   add_foreign_key "ingredients", ["tax_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_tax_id_fkey"
   add_foreign_key "ingredients", ["custom_duty_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_custom_duty_id_fkey"
-
-  add_foreign_key "price_currencies", ["price_id"], "prices", ["id"], :on_delete => :cascade, :name => "price_currencies_price_id_fkey"
 
 end

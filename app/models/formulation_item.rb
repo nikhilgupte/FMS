@@ -25,8 +25,8 @@ class FormulationItem < ActiveRecord::Base
     quantity * 100.0 / formulation.total_quantity
   end
 
-  def price_percentage
-    price(:inr) * 100 / formulation.total_price(:inr)
+  def price_percentage(currency_code)
+    price(currency_code) * 100 / formulation.total_price(currency_code) rescue nil
   end
 
   def to_s
@@ -34,8 +34,10 @@ class FormulationItem < ActiveRecord::Base
   end
 
   def price(currency_code)
-    #compound.unit_price(currency_code) * UNIT_WEIGHT
-    constituent_ingredients.entries.sum{|i| i.price(currency_code)}
+    @price ||= begin
+      ratio = compound.is_a?(Ingredient) ? quantity : quantity/compound.net_weight
+      constituent_ingredients.entries.sum{|i| i.ingredient.unit_price(currency_code) * i.quantity * ratio  }
+    end
   end
 
   class << self
@@ -68,11 +70,16 @@ class FormulationItem < ActiveRecord::Base
   def explode!
     constituent_ingredients.delete_all    
     if compound.is_a?(Ingredient)
-      constituent_ingredients.create! :ingredient => compound, :quantity => quantity
+      constituent_ingredients.create! :ingredient => compound, :quantity => 1
     else
-      compound.constituent_ingredients.each do |ci|
-        constituent_ingredients.create! :ingredient => ci.ingredient, :quantity => (quantity / compound.net_weight) * ci.quantity
+      compound.items.each do |ci|
+        ci.constituent_ingredients.each do |cing|
+          constituent_ingredients.create! :ingredient => cing.ingredient, :quantity => ci.quantity/compound.net_weight
+        end
       end
+      #compound.constituent_ingredients.each do |ci|
+        #constituent_ingredients.create! :ingredient => ci.ingredient, :quantity => ci.quantity/compound.net_weight
+      #end
     end
   end
 end

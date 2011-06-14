@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_user, :logged_in?, :current_currency
 
   def current_currency
-    Currency.find_by_code 'INR' 
+    Currency.find_by_code! params[:currency] || :inr
   end
 
   private

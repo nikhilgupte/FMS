@@ -12,4 +12,4 @@
       %li= link_to "Copy", new_fragrance_path(:copy_of_id => params[:id], :as_on => params[:as_on])
 
 = render :partial => 'formulations/show', :locals => { :formulation => @fragrance }
-= render 'formulations/items'
+= render :partial => 'formulations/items', :locals => { :formulation => @fragrance }

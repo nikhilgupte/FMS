@@ -4,7 +4,10 @@ class Formulation < ActiveRecord::Base
   acts_as_audited
   has_associated_audits
 
+  attr_accessor :as_on
+
   STATES = %w(draft active deleted locked)
+
   belongs_to :owner, :class_name => 'User'
   has_many :items, :class_name => 'FormulationItem', :dependent => :delete_all, :conditions => { :deleted_at => nil }
   has_many :all_items, :class_name => 'FormulationItem', :readonly => true
@@ -29,16 +32,21 @@ class Formulation < ActiveRecord::Base
   end
 
   def net_weight
-    items.sum(:quantity)
+    items.entries.sum(&:quantity)
   end
 
   def as_on(date)
     date = Time.parse(date).utc if date.is_a?(String)
-    date += 1 # to avoid time precision
+    date += 1
     f = revision_at(date)
     f.clone.tap do |g|
+      g.as_on = date
       f.all_items.as_on(date).each do |item|
-        g.items << (item.revision_at(date) || item).clone
+        item = item.revision_at(date) || item
+        tmp_item = item.clone
+        tmp_item.constituent_ingredients = item.constituent_ingredients.clone
+        tmp_item.formulation = g
+        g.items << tmp_item
       end
     end
   end
@@ -68,15 +76,21 @@ class Formulation < ActiveRecord::Base
   end
 
   def total_quantity
-    @total_quantity ||= items.sum(:quantity)
+    @total_quantity ||= items.entries.sum(&:quantity)
   end
 
   def total_price(currency_code)
-    @total_price ||= items.entries.sum{|i| i.price(currency_code)}
+    @total_price ||= begin
+      items.entries.sum{|i| i.price(currency_code)}
+    end
   end
 
   def unit_price(currency_code)
     total_price(currency_code) * 1000 / total_quantity
+  end
+
+  def current
+    @as_on == nil
   end
 
   private 
