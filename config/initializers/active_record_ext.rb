@@ -9,3 +9,4 @@ module ActiveRecord
     end
   end
 end
+ActiveRecord::Base.extend(ActiveSupport::Memoizable)

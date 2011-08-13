@@ -1,5 +1,6 @@
 class Accord < Formulation
 
+  has_many :formulation_items, :as => :compound
   scope :with_name_or_code, lambda { |term| where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
 
   class << self

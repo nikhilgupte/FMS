@@ -1,8 +1,9 @@
 class FormulationIngredient < ActiveRecord::Base
+  include SoftDeletable
   belongs_to :formulation_item
   belongs_to :ingredient
 
   def price(currency_code)
-    (ingredient.unit_price(currency_code)) * quantity rescue nil
+    (ingredient.price_per_gram(currency_code)) * quantity
   end
 end

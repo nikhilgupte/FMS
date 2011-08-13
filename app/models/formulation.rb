@@ -4,14 +4,13 @@ class Formulation < ActiveRecord::Base
   acts_as_audited
   has_associated_audits
 
-  attr_accessor :as_on
+  attr_accessor :as_on_date
 
   STATES = %w(draft active deleted locked)
 
   belongs_to :owner, :class_name => 'User'
-  has_many :items, :class_name => 'FormulationItem', :dependent => :delete_all, :conditions => { :deleted_at => nil }
-  has_many :all_items, :class_name => 'FormulationItem', :readonly => true
-  has_many :constituent_ingredients, :through => :items
+  has_many :items, :class_name => 'FormulationItem', :dependent => :delete_all
+  has_many :constituents, :through => :items
 
   validates :name, :product_year, :presence => true
   validates :state, :inclusion => STATES
@@ -39,17 +38,25 @@ class Formulation < ActiveRecord::Base
     date = Time.parse(date).utc if date.is_a?(String)
     date += 1
     f = revision_at(date)
-    f.clone.tap do |g|
-      g.as_on = date
-      f.all_items.as_on(date).each do |item|
-        item = item.revision_at(date) || item
-        tmp_item = item.clone
-        tmp_item.constituent_ingredients = item.constituent_ingredients.clone
-        tmp_item.formulation = g
-        g.items << tmp_item
-      end
+    #f.clone.tap do |g|
+    f.tap do |g|
+      g.as_on_date = date
+      #f.items.as_on(date).each do |item|
+        #g.as_on_date = date
+        #item = item.revision_at(date) || item
+        #tmp_item = item.clone
+        #tmp_item.constituents = item.constituents.clone
+        #tmp_item.formulation = g
+        #g.items << tmp_item
+        #g.items << item
+      #end
     end
   end
+
+  def current_items
+    items.as_on(as_on_date).collect{|i| i.as_on(as_on_date)}
+  end
+
 
   def copy(as_on = nil)
     if as_on.present?
@@ -79,20 +86,24 @@ class Formulation < ActiveRecord::Base
     @total_quantity ||= items.entries.sum(&:quantity)
   end
 
-  def total_price(currency_code)
-    @total_price ||= begin
-      items.entries.sum{|i| i.price(currency_code)}
-    end
-  rescue
-    nil
+  def unit_price(currency_code = 'INR')
+    constituents.as_on(as_on_date).entries.sum{|c| c.price(currency_code)}
   end
 
-  def unit_price(currency_code)
-    total_price(currency_code) * 1000 / total_quantity rescue nil
+  def price_per_gram(currency_code)
+    unit_price(currency_code) / net_weight
   end
 
-  def current
-    @as_on == nil
+  def price_per_kilogram(currency_code)
+    price_per_gram(currency_code) * 1000
+  end
+
+  def current?
+    @as_on_date == nil
+  end
+
+  def as_on_date
+    @as_on_date ||= Time.now
   end
 
   private 

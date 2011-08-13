@@ -14,7 +14,8 @@ class AccordsController < ApplicationController
     @accord = Accord.find params[:id]
     if params[:as_on].present?
       @accord = @accord.as_on(params[:as_on])
-      @items = @accord.items
+      #@items = @accord.items
+      @items = @accord.current_items
       flash.now[:notice] = "You are viewing an older version (#{Time.parse(params[:as_on]).to_s(:long)}) of this accord."
     else
       @items = @accord.items.current

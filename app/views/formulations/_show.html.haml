@@ -24,10 +24,10 @@
       == #{number_with_precision formulation.net_weight, :precision => 3}
       %span.tip grams
   %tr
-    %th Price
-    %td{ :colspan => 3 }= number_to_currency formulation.total_price(current_currency.code), :unit => current_currency.symbol
-  %tr
     %th Unit Price
+    %td{ :colspan => 3 }= number_to_currency formulation.unit_price(current_currency.code), :unit => current_currency.symbol
+  %tr
+    %th Price
     %td{ :colspan => 3 }
-      == #{number_to_currency(formulation.unit_price(current_currency.code), :unit => current_currency.symbol)}
+      == #{number_to_currency(formulation.price_per_kilogram(current_currency.code), :unit => current_currency.symbol)}
       %span.tip per kg

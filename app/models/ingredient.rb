@@ -9,7 +9,7 @@ class Ingredient < ActiveRecord::Base
   auto_strip :name, :code
 
   scope :having_price, where("ingredients.id in (select priceable_id from prices where priceable_type = 'Ingredient')")
-  scope :with_name_or_code, lambda { |term| where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
+  scope :with_name_or_code, lambda { |term| having_price.where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
 
   def gross_price(currency_code, as_on = Date.today)
     currency_code = currency_code.to_s.downcase.to_s
@@ -26,7 +26,7 @@ class Ingredient < ActiveRecord::Base
     end
   end
 
-  def unit_price(currency_code)
+  def price_per_gram(currency_code = 'INR')
     gross_price(currency_code) / UNIT_WEIGHT rescue nil
   end
 

@@ -1,11 +1,12 @@
 class FormulationItem < ActiveRecord::Base
   include SoftDeletable
+  attr_writer :as_on_date
 
   UNIT_WEIGHT = 1
 
   belongs_to :formulation, :touch => true
   belongs_to :compound, :polymorphic => true
-  has_many :constituent_ingredients, :class_name => 'FormulationIngredient'
+  has_many :constituents, :class_name => 'FormulationIngredient'
 
   attr_accessor :compound_name
 
@@ -14,31 +15,35 @@ class FormulationItem < ActiveRecord::Base
 
   after_save :explode!
 
-  acts_as_audited :associated_with => :formulation
-
   default_scope order(:id)
-  scope :as_on, lambda { |date| where("formulation_items.created_at <= :date and (formulation_items.deleted_at is null or formulation_items.deleted_at > :date)", { :date => date }) }
-  scope :current, lambda { as_on(Time.now + 1) }
-  scope :active, where(:deleted_at => nil)
+
+  acts_as_audited :associated_with => :formulation
 
   def quantity_percentage
     quantity * 100.0 / formulation.total_quantity
   end
 
   def price_percentage(currency_code)
-    price(currency_code) * 100 / formulation.total_price(currency_code) rescue nil
+    price(currency_code) * 100 / formulation.unit_price(currency_code) rescue nil
   end
 
   def to_s
     [compound.to_s, "#{quantity} gms"].join(' - ')
   end
 
-  def price(currency_code)
-    @price ||= begin
-      #ratio = compound.is_a?(Ingredient) ? quantity : quantity/compound.net_weight
-      #constituent_ingredients.entries.sum{|i| i.ingredient.unit_price(currency_code) * i.quantity * ratio  }
-      quantity * compound.unit_price(currency_code) rescue nil
-    end
+  def price(currency_code = 'INR')
+    constituents.as_on(as_on_date).entries.sum{|c| c.price(currency_code)}
+  end
+  memoize :price
+
+  def as_on_date
+    @as_on_date ||= Time.now
+  end
+
+  def as_on(date)
+    i = revision_at(date)
+    i.as_on_date = date
+    i
   end
 
   class << self
@@ -69,17 +74,15 @@ class FormulationItem < ActiveRecord::Base
   end
 
   def explode!
-    constituent_ingredients.delete_all    
+    constituents.destroy_all    
     if compound.is_a?(Ingredient)
-      constituent_ingredients.create! :ingredient => compound, :quantity => 1
+      constituents.create! :ingredient => compound, :quantity => self.quantity
     else
-      compound.items.each do |ci|
-        ci.constituent_ingredients.each do |cing|
-          constituent_ingredients.create! :ingredient => cing.ingredient, :quantity => ci.quantity/compound.net_weight
+      #compound.items.current.each do |ci|
+        compound.constituents.current.each do |i|
+          #constituents.create! :ingredient => c.ingredient, :quantity => c.quantity/compound.net_weight
+          constituents.create! :ingredient => i.ingredient, :quantity => (i.quantity / compound.quantity) * self.quantity
         end
-      end
-      #compound.constituent_ingredients.each do |ci|
-        #constituent_ingredients.create! :ingredient => ci.ingredient, :quantity => ci.quantity/compound.net_weight
       #end
     end
   end

@@ -4,6 +4,7 @@ class CreateFormulationIngredients < ActiveRecord::Migration
       t.references :formulation_item
       t.references :ingredient
       t.float :quantity
+      t.datetime :deleted_at
 
       t.timestamps
     end

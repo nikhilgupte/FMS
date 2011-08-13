@@ -14,7 +14,7 @@ class FragrancesController < ApplicationController
     @fragrance = Fragrance.find params[:id]
     if params[:as_on].present?
       @fragrance = @fragrance.as_on(params[:as_on])
-      @items = @fragrance.items
+      @items = @fragrance.current_items
       flash.now[:notice] = "You are viewing an older version (#{Time.parse(params[:as_on]).to_s(:long)}) of this fragrance."
     else
       @items = @fragrance.items.current
