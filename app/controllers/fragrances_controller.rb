@@ -12,28 +12,18 @@ class FragrancesController < ApplicationController
 
   def show
     @fragrance = Fragrance.find params[:id]
-    if params[:as_on].present?
-      @fragrance = @fragrance.as_on(params[:as_on])
-      @items = @fragrance.current_items
-      flash.now[:notice] = "You are viewing an older version (#{Time.parse(params[:as_on]).to_s(:long)}) of this fragrance."
+    if(version = params[:version]).present?
+      @formulation_version = version == 'draft' ?  @fragrance.draft_version : @fragrance.version.find_by_tag(version)
     else
-      @items = @fragrance.items.current
+      @formulation_version = @fragrance.current_version
     end
+    @items = @formulation_version.items.current
   end
 
   def new
-    if params[:copy_of_id].present?
-      original = Fragrance.find(params[:copy_of_id])
-      @fragrance = original.copy(params[:as_on])
-      flash.now[:notice] = "Copied from #{original}"
-      if params[:as_on].present?
-        flash.now[:notice] << " version (#{Time.parse(params[:as_on]).to_s(:long)})"
-      end
-    else
-      @fragrance = Fragrance.new
-      3.times{ @fragrance.items.build }
-    end
-    @fragrance.product_year = Time.now.year
+    @fragrance = Fragrance.new
+    @fragrance.build_draft_version.init
+    #@fragrance.versions.build.init
   end
 
   def create
@@ -47,14 +37,21 @@ class FragrancesController < ApplicationController
 
   def edit
     @fragrance = Fragrance.find params[:id]
+    @fragrance.build_draft unless @fragrance.draft_version.present?
   end
 
   def update
     @fragrance = Fragrance.find params[:id]
     if @fragrance.update_attributes params[:fragrance]
-      redirect_to @fragrance, :flash => { :success => "Fragrance updated" }
+      redirect_to fragrance_url(@fragrance, :version => 'draft'), :flash => { :success => "Fragrance updated" }
     else
       render :edit
     end
+  end
+
+  def publish
+    @fragrance = Fragrance.find params[:id]
+    @fragrance.draft_version.publish!
+    redirect_to @fragrance, :flash => { :success => "Fragrance published" }
   end
 end

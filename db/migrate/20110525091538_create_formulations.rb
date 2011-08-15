@@ -1,22 +1,18 @@
 class CreateFormulations < ActiveRecord::Migration
   def self.up
     create_table :formulations do |t|
-      t.string :type
-      t.string :code
-      t.string :name
-      t.string :state
+      t.integer :current_version_id
       t.integer :owner_id
-      t.text :top_note
-      t.text :middle_note
-      t.text :base_note
+      t.string :type
       t.integer :product_year
       t.string :origin_formula_id
+      t.string :code, :null => false, :unique => true
+      t.integer :versions_count, :null => false, :default => 0
 
       t.timestamps
     end
     add_index :formulations, :owner_id
     add_index :formulations, :type
-    add_index :formulations, :state
     add_index :formulations, :code, :unique => true, :case_sensitive => false
   end
 

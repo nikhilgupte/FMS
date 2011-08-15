@@ -4,7 +4,7 @@ class FormulationItem < ActiveRecord::Base
 
   UNIT_WEIGHT = 1
 
-  belongs_to :formulation, :touch => true
+  belongs_to :formulation_version #, :touch => true
   belongs_to :compound, :polymorphic => true
   has_many :constituents, :class_name => 'FormulationIngredient'
 
@@ -17,14 +17,14 @@ class FormulationItem < ActiveRecord::Base
 
   default_scope order(:id)
 
-  acts_as_audited :associated_with => :formulation
+  acts_as_audited :associated_with => :formulation_version
 
   def quantity_percentage
-    quantity * 100.0 / formulation.total_quantity
+    quantity * 100.0 / formulation_version.total_quantity
   end
 
   def price_percentage(currency_code)
-    price(currency_code) * 100 / formulation.unit_price(currency_code) rescue nil
+    price(currency_code) * 100 / formulation_version.unit_price(currency_code) rescue nil
   end
 
   def to_s

@@ -196,8 +196,23 @@ textarea.expandable:focus {
 	padding: 4px 10px!important;
 }
 
+.button {
+			display: block;
+			@include my-border-radius(4px);
+			@include my-gradient(color-stops(#fff, #ccc));
+			border: 1px solid #aaa;
+			font-size: 10pt!important;
+			color: #000!important;
+			margin: 0!important;
+			text-decoration: none;
+			padding: 2px 10px!important;
+			&.primary {
+				@include my-gradient(color-stops(#0a0, #060));
+				border: 1px solid #070;
+				color: #fff!important;
+			}
+}
 .buttons {
-	//@include clearfix;
 	height: 30px;
 	margin: 10px 0;
 	padding: 0;

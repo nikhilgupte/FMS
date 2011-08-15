@@ -1,0 +1,33 @@
+%table.form
+  %tr
+    %th Owner
+    %td= formulation_version.owner
+    %th State
+    %td= formulation_version.state
+  %tr
+    %th Product Year
+    %td= formulation_version.product_year
+    %th Origin Formula ID
+    %td= formulation_version.origin_formula_id || "N/A"
+  %tr
+    %th Top Note
+    %td{ :colspan => 3 }= formulation_version.top_note.present? ? formulation_version.top_note : "N/A"
+  %tr
+    %th Middle Note
+    %td{ :colspan => 3 }= formulation_version.middle_note.present? ? formulation_version.middle_note : "N/A"
+  %tr
+    %th Base Note
+    %td{ :colspan => 3 }= formulation_version.base_note.present? ? formulation_version.base_note : "N/A"
+  %tr
+    %th Net Weight
+    %td{ :colspan => 3 }
+      == #{number_with_precision formulation_version.net_weight, :precision => 3}
+      %span.tip grams
+  %tr
+    %th Unit Price
+    %td{ :colspan => 3 }= number_to_currency formulation_version.unit_price(current_currency.code), :unit => current_currency.symbol
+  %tr
+    %th Price
+    %td{ :colspan => 3 }
+      == #{number_to_currency(formulation_version.price_per_kilogram(current_currency.code), :unit => current_currency.symbol)}
+      %span.tip per kg

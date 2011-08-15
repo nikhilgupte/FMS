@@ -1,15 +1,24 @@
 - @page_title = "Fragrance: #{@fragrance}"
 
 %ul.buttons
-  - unless params[:as_on].present?
-    %li= link_to "Edit Fragrance", edit_fragrance_path, :class => 'primary'
-  - else
-    %li= link_to "&laquo; Current Version".html_safe, fragrance_path, :class => 'primary'
+  - unless @formulation_version.current?
+    %li= link_to "&laquo; Current Version".html_safe, @fragrance, :class => 'primary'
+  - if @formulation_version.current? || @formulation_version.draft?
+    %li= link_to "Edit", [:edit, @fragrance], :class => 'primary'
+  - if @formulation_version.draft?
+    %li= link_to "Publish", [:publish, @fragrance], :method => :put
   %li.select
     %a More
     %ul
-      %li= link_to "View History", history_fragrance_path
+      %li= link_to "View History", [:history, @fragrance]
       %li= link_to "Copy", new_fragrance_path(:copy_of_id => params[:id], :as_on => params[:as_on])
 
-= render :partial => 'formulations/show', :locals => { :formulation => @fragrance }
-= render :partial => 'formulations/items', :locals => { :formulation => @fragrance }
+- if !@formulation_version.draft? && (draft_version = @fragrance.draft_version).present?
+  .notice
+    View
+    = link_to 'Draft version', fragrance_path(@fragrance, { :version => :draft })
+    saved on
+    = draft_version.updated_at.to_s(:short)
+
+= render :partial => 'formulation_versions/show', :locals => { :formulation_version => @formulation_version }
+= render :partial => 'formulation_versions/items', :locals => { :items => @items }
