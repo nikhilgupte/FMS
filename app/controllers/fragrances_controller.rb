@@ -1,57 +1,32 @@
-class FragrancesController < ApplicationController
+class FragrancesController < FormulationsController
   layout 'formulations'
 
   def index
     @fragrances = Fragrance.all.paginate :page => params[:page], :per_page => 20
   end
 
-  def history
-    @fragrance = Fragrance.find params[:id]
-    @changes = @fragrance.changes
-  end
-
-  def show
-    @fragrance = Fragrance.find params[:id]
-    if(version = params[:version]).present?
-      @formulation_version = version == 'draft' ?  @fragrance.draft_version : @fragrance.version.find_by_tag(version)
-    else
-      @formulation_version = @fragrance.current_version
-    end
-    @items = @formulation_version.items.current
-  end
-
   def new
-    @fragrance = Fragrance.new
-    @fragrance.build_draft_version.init
-    #@fragrance.versions.build.init
+    @formulation = Fragrance.new
+    @formulation.build_draft_version.init
+    render "formulations/new"
   end
 
   def create
-    @fragrance = current_user.fragrances.build params[:fragrance]
-    if @fragrance.save
-      redirect_to @fragrance, :flash => { :success => 'Fragrance created.' }
+    @formulation = current_user.fragrances.build params[:fragrance]
+    if @formulation.save
+      redirect_to @formulation, :flash => { :success => 'Fragrance created.' }
     else
-      render :new
+      render :template => "formulations/new"
     end
-  end
-
-  def edit
-    @fragrance = Fragrance.find params[:id]
-    @fragrance.build_draft unless @fragrance.draft_version.present?
   end
 
   def update
-    @fragrance = Fragrance.find params[:id]
-    if @fragrance.update_attributes params[:fragrance]
-      redirect_to fragrance_url(@fragrance, :version => 'draft'), :flash => { :success => "Fragrance updated" }
+    @formulation = Fragrance.find params[:id]
+    if @formulation.update_attributes params[:fragrance]
+      redirect_to fragrance_url(@formulation, :version => 'draft'), :flash => { :success => "Fragrance updated" }
     else
-      render :edit
+      render "formulations/edit"
     end
   end
 
-  def publish
-    @fragrance = Fragrance.find params[:id]
-    @fragrance.draft_version.publish!
-    redirect_to @fragrance, :flash => { :success => "Fragrance published" }
-  end
 end

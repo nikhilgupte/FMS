@@ -4,16 +4,16 @@ Fms::Application.routes.draw do
   resource :session, :only => [:new, :create, :destroy]
   resources :fragrances, :except => [:destroy] do
     member do
-      get :history
       put :publish
     end
-    resources :versions, :except => [:destroy], :controller => 'formulation_versions'
+    resources :formulation_versions, :except => [:destroy], :path => 'versions'
   end
 
   resources :accords, :except => [:destroy] do
     member do
-      get :history
+      put :publish
     end
+    resources :formulation_versions, :except => [:destroy], :path => 'versions'
     collection do
       get 'autocomplete'
     end

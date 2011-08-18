@@ -1,7 +1,0 @@
-- @page_title = "New Formulation"
-
-= form_for @fragrance do |form|
-  = form.error_messages
-  -#- form.fields_for :versions do |version_form|
-  - form.fields_for :draft_version do |version_form|
-    = render :partial => 'formulation_versions/form', :object => version_form

@@ -1,7 +1,7 @@
 class Accord < Formulation
 
   has_many :formulation_items, :as => :compound
-  scope :with_name_or_code, lambda { |term| where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
+  after_save :update_dependents, :if => :current_version_id_changed?
 
   class << self
     def import_from_csv(file)
@@ -12,4 +12,32 @@ class Accord < Formulation
     end
   end
 
+  def derivatives
+    Formulation.includes(:current_version => [:items]).where(:formulation_versions => { :state => 'published', :formulation_items => { :compound_type => 'Accord', :compound_id => id } })
+  end
+
+  def derivative_versions
+    FormulationVersion.includes(:items).where(:formulation_items => { :compound_type => 'Accord', :compound_id => id })
+  end
+
+  def update_dependents
+    update_derivatives
+    update_derivative_draft_versions
+  end
+
+  private
+  def update_derivatives
+    derivatives.each do |formulation|
+      formulation.bump_version!(self)
+    end
+  end
+
+  def update_derivative_draft_versions
+    derivative_versions.drafts.each do |version|
+      version.items.accords.where(:compound_id => id).each &:explode!
+      version.version_updated_at = Time.now
+      version.audit_comment = "Updated Accord - #{self.to_s}"
+      version.save!
+    end
+  end
 end

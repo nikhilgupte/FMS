@@ -1,6 +1,15 @@
 $(function() {
   $('.hint').hint();
   $('textarea.elastic').elastic();
+  $('a.toggle').click(function() {
+    $($(this).attr('href')).toggle();
+    if($(this).hasClass('more')) {
+      $(this).text(($(this).text() == 'more') ? 'less' : 'more');
+    } else {
+      $(this).text(($(this).text() == 'show') ? 'hide' : 'show');
+    }
+    return false;
+  });
   $('form.todo').submit(todo);
   $('a.todo').click(todo);
   $('<div id="loading">Please wait...</div>')

@@ -4,7 +4,7 @@ class FormulationItem < ActiveRecord::Base
 
   UNIT_WEIGHT = 1
 
-  belongs_to :formulation_version #, :touch => true
+  belongs_to :formulation_version
   belongs_to :compound, :polymorphic => true
   has_many :constituents, :class_name => 'FormulationIngredient'
 
@@ -16,6 +16,7 @@ class FormulationItem < ActiveRecord::Base
   after_save :explode!
 
   default_scope order(:id)
+  scope :accords, where(:compound_type => 'Accord')
 
   acts_as_audited :associated_with => :formulation_version
 
@@ -75,15 +76,15 @@ class FormulationItem < ActiveRecord::Base
 
   def explode!
     constituents.destroy_all    
-    if compound.is_a?(Ingredient)
-      constituents.create! :ingredient => compound, :quantity => self.quantity
-    else
-      #compound.items.current.each do |ci|
+    unless self.deleted?
+      if compound.is_a?(Ingredient)
+        constituents.create! :ingredient => compound, :quantity => self.quantity
+      else
         compound.constituents.current.each do |i|
-          #constituents.create! :ingredient => c.ingredient, :quantity => c.quantity/compound.net_weight
-          constituents.create! :ingredient => i.ingredient, :quantity => (i.quantity / compound.quantity) * self.quantity
+          constituents.create! :ingredient => i.ingredient, :quantity => (i.quantity / compound.net_weight) * self.quantity
         end
-      #end
+      end
     end
+    true
   end
 end

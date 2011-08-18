@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110815155611) do
+ActiveRecord::Schema.define(:version => 20110818080732) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -78,6 +79,7 @@ ActiveRecord::Schema.define(:version => 20110815155611) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "version_number", :null => false
+    t.datetime "published_at"
   end
 
   add_index "formulation_versions", ["formulation_id"], :name => "index_formulation_versions_on_formulation_id"
@@ -93,7 +95,7 @@ ActiveRecord::Schema.define(:version => 20110815155611) do
     t.string   "code",                              :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "version_count",      :default => 0, :null => false
+    t.integer  "versions_count",     :default => 0, :null => false
   end
 
   add_index "formulations", ["owner_id"], :name => "index_formulations_on_owner_id"

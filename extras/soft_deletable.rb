@@ -18,5 +18,9 @@ module SoftDeletable
     def soft_delete!
       update_attribute :deleted_at, Time.now.utc
     end
+
+    def soft_deletable?
+      true
+    end
   end
 end

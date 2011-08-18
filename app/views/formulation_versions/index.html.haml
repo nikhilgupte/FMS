@@ -1,0 +1,43 @@
+- @page_title = "#{@formulation.type}: #{@formulation}"
+
+%ul.buttons
+  %li
+    = link_to "&laquo; Current version".html_safe, @formulation, :class => 'primary'
+
+%h3 History
+
+%table.list
+  %thead
+    %tr
+      %th #
+      %th Created
+      %th By
+      %th Changes
+  %tbody
+    - @versions.each do |version|
+      %tr
+        %td= link_to version, version
+        %td{ :title => version.created_at.to_s(:long) }== #{time_ago_in_words(version.created_at)} ago
+        %td= version.audits.first.user
+        %td
+          %table.list
+            %tbody
+              - version.changes.each do |change|
+                %tr
+                  %td{ :style => 'width: 50px' }= change.created_at.to_s(:short)
+                  - unless change.comment.present?
+                    %td{ :style => 'width: 30px' }= display_audit_action change
+                    %td
+                      - if change.auditable.is_a?(FormulationItem)
+                        = change.auditable.revision_at(change.created_at + 1)
+                      - elsif change.action != 'create'
+                        = change.audited_changes.keys.collect(&:humanize).join(", ")
+                        -# TODO: Add a popup w/ change details
+                        -#%ul
+                          - change.audited_changes.keys.each do |field|
+                            %li
+                              %strong= field.humanize
+                              =  change.audited_changes[field]
+                  - else
+                    %td{ :colspan => 2}= change.comment
+

@@ -1,0 +1,5 @@
+- @page_title = "Edit #{@formulation.class.name}"
+
+= form_for @formulation do |form|
+  = form.fields_for :draft_version do |version_form|
+    = render :partial => 'formulation_versions/form', :object => version_form
