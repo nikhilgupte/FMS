@@ -31,3 +31,4 @@ gem "pickle", :group => :cucumber
 gem 'seed-fu'
 gem "default_value_for", :git => 'https://github.com/FooBarWidget/default_value_for.git'
 gem "meta_where"
+gem "meta_search"

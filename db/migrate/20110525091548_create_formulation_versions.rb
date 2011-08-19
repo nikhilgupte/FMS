@@ -7,6 +7,7 @@ class CreateFormulationVersions < ActiveRecord::Migration
       t.text :top_note
       t.text :middle_note
       t.text :base_note
+      t.datetime :version_updated_at
 
       t.timestamps
     end

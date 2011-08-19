@@ -3,7 +3,7 @@
     #main_menu
       .wrapper
         %ul
-          %li.current= link_to 'Formulations', fragrances_path
-          %li= link_to 'Ingredients', ingredients_path
-          %li= link_to 'Admin', '#', :class => 'todo'
+          %li{ :class => current_tab?(:formulations) ? 'current' : nil }= link_to 'Formulations', fragrances_path
+          %li{ :class => current_tab?(:ingredients) ? 'current' : nil }= link_to 'Ingredients', ingredients_path
+          %li{ :class => current_tab?(:admin) ? 'current' : nil }= link_to 'Admin', '#', :class => 'todo'
   = yield

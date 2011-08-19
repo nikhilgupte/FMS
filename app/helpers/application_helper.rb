@@ -44,4 +44,8 @@ module ApplicationHelper
     end
     send(formulation_path, formulation, opts)
   end
+
+  def current_tab?(tab)
+    @tab.to_sym == tab.to_sym
+  end
 end

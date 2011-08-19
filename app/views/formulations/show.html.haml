@@ -1,4 +1,4 @@
-- @page_title = "#{@formulation.class.name}: #{@formulation}"
+- @page_title = @formulation
 
 - if @formulation_version.current? && !@formulation_version.draft? && (draft_version = @formulation.draft_version).present?
   .notice

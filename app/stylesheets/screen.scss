@@ -59,7 +59,8 @@
 #sub_menu {
 	background: #eee;
 	border-bottom: 1px solid #ddd;
-	height:28px;
+	max-height:28px;
+	min-height:5px;
 	ul {
 		@include inline-block-list;
 		> li {

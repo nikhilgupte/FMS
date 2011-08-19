@@ -1,0 +1,23 @@
+- @page_title = @ingredient
+
+%ul.buttons
+  %li= link_to "Edit", [:edit, @ingredient], :class => 'primary'
+  %li.select
+    %a View
+    %ul
+      %li= link_to "History", "#", :class => 'todo'
+      %li= link_to "Derivatives", "#", :class => 'todo'
+
+%table.form
+  %tr
+    %th Name
+    %td= @ingredient.name
+    %th Code
+    %td= @ingredient.code
+  %tr
+    %th= @ingredient.tax.name
+    %td= number_to_percentage @ingredient.tax.amount
+    %th= @ingredient.custom_duty.name
+    %td= number_to_percentage @ingredient.custom_duty.amount
+
+%h2 Prices

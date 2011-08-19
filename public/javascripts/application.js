@@ -1,6 +1,7 @@
 $(function() {
   $('.hint').hint();
   $('textarea.elastic').elastic();
+  $('.clickable').fitted();
   $('a.toggle').click(function() {
     $($(this).attr('href')).toggle();
     if($(this).hasClass('more')) {

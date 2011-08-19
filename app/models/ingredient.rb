@@ -3,6 +3,7 @@ class Ingredient < ActiveRecord::Base
   UNIT_WEIGHT = 1000
 
   has_many :prices, :as => :priceable, :dependent => :delete_all
+  #has_one :current_price, :as => :priceable, :conditions => proc {["prices.applicable_from <= ?", Time.now]}, :as => :priceable, :class_name => 'Price'
   belongs_to :tax
   belongs_to :custom_duty
 
@@ -11,10 +12,13 @@ class Ingredient < ActiveRecord::Base
   scope :having_price, where("ingredients.id in (select priceable_id from prices where priceable_type = 'Ingredient')")
   scope :with_name_or_code, lambda { |term| having_price.where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
 
+  def priced?
+    prices.exists?
+  end
+
   def gross_price(currency_code, as_on = Date.today)
-    currency_code = currency_code.to_s.downcase.to_s
-    price = prices.last
-    #return amount = price.to(currency_code)
+    currency_code = currency_code.to_s.downcase.to_sym
+    price = prices.as_on(as_on)
     if currency_code == :inr
       if price.in?(:inr)
         amount = price.to(:inr) * (1 + (tax.try(:amount) || 0))
@@ -44,12 +48,12 @@ class Ingredient < ActiveRecord::Base
         end
       end
     end
-  end
 
-  def create_or_update_price(as_on, price_values)
-    price = prices.where(:as_on => as_on).first || prices.build(:as_on => as_on)
-    price.attributes = price_values.merge(:calculated => false)
-    price.save!
+    def create_or_update_price(as_on, price_values)
+      price = prices.where(:as_on => as_on).first || prices.build(:as_on => as_on)
+      price.attributes = price_values.merge(:calculated => false)
+      price.save!
+    end
   end
 
   def to_s

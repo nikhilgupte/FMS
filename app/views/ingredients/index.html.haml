@@ -1,0 +1,22 @@
+- @page_title = 'Ingredients'
+
+%ul.buttons
+  %li= link_to "+ Add Ingredient", "#", :class => 'primary todo'
+
+%table.striped.list
+  %thead
+    %tr
+      %th Code
+      %th{ :style => 'width: 80%' } Name
+      %th{ :colspan => 3 } Gross Price
+  %tbody
+    - @ingredients.each do |ingredient|
+      %tr.clickable
+        %td= link_to ingredient.code, ingredient
+        %td= ingredient.name
+        - if ingredient.priced?
+          - Price::SUPPORTED_CURRENCIES.each do |currency, symbol|
+            %td.numeric
+              = number_to_currency ingredient.gross_price(currency), :unit => symbol
+        - else
+          %td{ :colspan => 3 }

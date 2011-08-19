@@ -5,7 +5,7 @@ class CreatePrices < ActiveRecord::Migration
       t.float :inr
       t.float :usd
       t.float :eur
-      t.date :as_on, :null => false
+      t.date :applicable_from, :null => false
       t.boolean :calculated, :null => false
       t.boolean :latest, :null => false, :default => false
 
