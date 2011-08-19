@@ -11,7 +11,7 @@ class Formulation < ActiveRecord::Base
   validates :product_year, :presence => true
   validates :origin_formula_id, :uniqueness => { :case_insensitive => true }, :allow_blank => true
 
-  delegate :name, :state, :published_at, :constituents, :net_weight, :to => :current_version
+  delegate :name, :state, :published_at, :constituents, :items, :net_weight, :to => :current_version
 
   before_create :generate_code!
 
@@ -38,28 +38,19 @@ class Formulation < ActiveRecord::Base
   end
 
   def create_draft_version
-    #draft = build_draft_version(current_version.attributes)
-    #current_version.items.current.each{|i| draft.items.build i.attributes}
-    new_version = build_copy_of_version
+    raise "Draft version already exists!" if draft_version.present?
+    draft_version = current_version.build_copy
+    draft_version.audit_comment = "New version created"
     FormulationItem.without_auditing do
-      new_version.save!
+      draft_version.save!
     end
-    new_version
+    self.reload
+    draft_version
   end
-
-  def build_copy_of_version(version = nil)
-    version = current_version if version.nil?
-    new_version = build_draft_version(version.attributes)
-    version.items.current.each{|i| new_version.items.build i.attributes}
-    new_version
-  end
-
-  #alias_method_chain :build_draft_version, :init
 
   def bump_version!(accord)
-    new_version = build_copy_of_version
+    new_version = current_version.build_copy
     new_version.audit_comment = "Updated Accord - #{accord}"
-    current_version.items.current.each{|i| new_version.items.build i.attributes}
     FormulationItem.without_auditing do
       new_version.publish!
     end

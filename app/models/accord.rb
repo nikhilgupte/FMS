@@ -34,10 +34,7 @@ class Accord < Formulation
 
   def update_derivative_draft_versions
     derivative_versions.drafts.each do |version|
-      version.items.accords.where(:compound_id => id).each &:explode!
-      version.version_updated_at = Time.now
-      version.audit_comment = "Updated Accord - #{self.to_s}"
-      version.save!
+      version.update_accord!(self)
     end
   end
 end

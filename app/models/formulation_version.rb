@@ -64,11 +64,13 @@ class FormulationVersion < ActiveRecord::Base
   end
 
   def publish!
-    self.state = 'published'
-    self.published_at = Time.now
-    self.audit_comment = "Published"
-    save!
-    make_current_version!
+    transaction do
+      self.state = 'published'
+      self.published_at = Time.now
+      self.audit_comment = "Published" unless self.audit_comment.present?
+      save!
+      make_current_version!
+    end
   end
 
   def make_current_version!
@@ -82,6 +84,19 @@ class FormulationVersion < ActiveRecord::Base
 
   def to_s
     version_number
+  end
+
+  def update_accord!(accord)
+    items.current.accords.where(:compound_id => accord.id).each &:explode!
+    self.version_updated_at = Time.now
+    self.audit_comment = "Updated Accord - #{accord}"
+    save!
+  end
+
+  def build_copy
+    copy = formulation.versions.build self.attributes
+    items.current.each{|i| copy.items.build i.attributes}
+    copy
   end
 
   private
