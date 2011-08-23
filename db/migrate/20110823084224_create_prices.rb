@@ -2,16 +2,12 @@ class CreatePrices < ActiveRecord::Migration
   def self.up
     create_table :prices do |t|
       t.references :priceable, :polymorphic => true
-      t.float :inr
-      t.float :usd
-      t.float :eur
+      t.string :currency_code, :null => false
+      t.decimal :amount, :precision => 8, :scale => 2
       t.date :applicable_from, :null => false
-      t.boolean :calculated, :null => false
-      t.boolean :latest, :null => false, :default => false
 
       t.timestamps
     end
-    add_index :prices, [:priceable_type, :priceable_id]
   end
 
   def self.down

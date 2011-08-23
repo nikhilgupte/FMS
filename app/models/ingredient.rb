@@ -2,14 +2,14 @@ class Ingredient < ActiveRecord::Base
 
   UNIT_WEIGHT = 1000
 
-  has_many :prices, :as => :priceable, :dependent => :delete_all
+  has_many :prices, :class_name => 'IngredientPrice'
   belongs_to :tax
   belongs_to :custom_duty
 
   auto_strip :name, :code
 
-  scope :having_price, where("ingredients.id in (select priceable_id from prices where priceable_type = 'Ingredient' and prices.calculated = true)")
-  scope :with_name_or_code, lambda { |term| having_price.where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
+  scope :with_price, lambda { |as_on = Date.today| where("ingredients.id in (select ingredient_id from ingredient_prices where applicable_from <= :applicable_from and ingredient_price_list_id is null)", :applicable_from => as_on) }
+  scope :with_name_or_code, lambda { |term| with_price.where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
 
   def priced?
     prices.exists?
@@ -63,9 +63,8 @@ class Ingredient < ActiveRecord::Base
     "#{name} (##{code})"
   end
 
-  def generate_gross_price(applicable_from)
-    p "-------------------------------------------id: #{id}"
-    gross_price = prices.build :calculated => true, :applicable_from => applicable_from
+  def build_gross_price(applicable_from)
+    gross_price = prices.build :applicable_from => applicable_from
     net_price = prices.net.as_on(applicable_from)
     if net_price.in?(:inr)
       tax_rate = tax.rate(applicable_from) rescue 0
@@ -76,6 +75,6 @@ class Ingredient < ActiveRecord::Base
     end
     gross_price.usd = net_price.to(:usd)
     gross_price.eur = net_price.to(:eur)
-    gross_price.save!
+    gross_price
   end
 end

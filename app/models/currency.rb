@@ -7,6 +7,15 @@ class Currency < ActiveRecord::Base
   before_save :upcase_code
 
   class << self
+    %w(usd eur).each do |code|
+      define_method "#{code}_to_inr" do |amount, as_on = Date.today|
+        amount * find_by_code!(code).prices.as_on(as_on).amount
+      end
+      define_method "inr_to_#{code}" do |amount, as_on = Date.today|
+        amount / find_by_code!(code).prices.as_on(as_on).amount
+      end
+    end
+
     def find_by_code!(currency_code)
       currency = find_by_code(currency_code.to_s.upcase)
       raise ActiveRecord::NotFound unless currency
