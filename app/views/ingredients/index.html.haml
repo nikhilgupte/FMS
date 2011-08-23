@@ -7,16 +7,19 @@
   %thead
     %tr
       %th Code
-      %th{ :style => 'width: 80%' } Name
+      %th{ :style => 'width: 40%' } Name
       %th{ :colspan => 3 } Gross Price
+      %th Since
   %tbody
     - @ingredients.each do |ingredient|
       %tr.clickable
         %td= link_to ingredient.code, ingredient
         %td= ingredient.name
-        - if ingredient.priced?
+        - if gross_price = ingredient.gross_price
           - Price::SUPPORTED_CURRENCIES.each do |currency, symbol|
-            %td.numeric
-              = number_to_currency ingredient.gross_price(currency), :unit => symbol
+            %td.numeric.border
+              = number_to_currency gross_price.in(currency), :unit => symbol
+          %td= gross_price.applicable_from.to_s(:long)
         - else
-          %td{ :colspan => 3 }
+          %td{ :colspan => 4 }
+= will_paginate @ingredients

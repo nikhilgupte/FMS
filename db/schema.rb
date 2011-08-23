@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110818080732) do
+ActiveRecord::Schema.define(:version => 20110821110508) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -70,16 +70,17 @@ ActiveRecord::Schema.define(:version => 20110818080732) do
   add_index "formulation_items", ["formulation_version_id"], :name => "index_formulation_items_on_formulation_version_id"
 
   create_table "formulation_versions", :force => true do |t|
-    t.integer  "formulation_id", :null => false
-    t.string   "name",           :null => false
-    t.string   "state",          :null => false
+    t.integer  "formulation_id",     :null => false
+    t.string   "name",               :null => false
+    t.string   "state",              :null => false
     t.text     "top_note"
     t.text     "middle_note"
     t.text     "base_note"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "version_number", :null => false
+    t.string   "version_number",     :null => false
     t.datetime "published_at"
+    t.datetime "version_updated_at"
   end
 
   add_index "formulation_versions", ["formulation_id"], :name => "index_formulation_versions_on_formulation_id"
@@ -125,6 +126,16 @@ ActiveRecord::Schema.define(:version => 20110818080732) do
 
   add_index "levies", ["type", "name"], :name => "index_levies_on_type_and_name", :unique => true, :case_sensitive => false
 
+  create_table "levy_rates", :force => true do |t|
+    t.integer  "levy_id",         :null => false
+    t.date     "applicable_from", :null => false
+    t.float    "rate",            :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "levy_rates", ["levy_id", "applicable_from"], :name => "index_levy_rates_on_levy_id_and_applicable_from", :unique => true
+
   create_table "price_currencies", :force => true do |t|
     t.integer  "price_id"
     t.string   "currency_code"
@@ -141,9 +152,9 @@ ActiveRecord::Schema.define(:version => 20110818080732) do
     t.float    "inr"
     t.float    "usd"
     t.float    "eur"
-    t.date     "as_on",                             :null => false
-    t.boolean  "calculated",                        :null => false
-    t.boolean  "latest",         :default => false, :null => false
+    t.date     "applicable_from",                    :null => false
+    t.boolean  "calculated",                         :null => false
+    t.boolean  "latest",          :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -180,5 +191,7 @@ ActiveRecord::Schema.define(:version => 20110818080732) do
 
   add_foreign_key "ingredients", ["custom_duty_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_custom_duty_id_fkey"
   add_foreign_key "ingredients", ["tax_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_tax_id_fkey"
+
+  add_foreign_key "levy_rates", ["levy_id"], "levies", ["id"], :on_delete => :cascade, :name => "levy_rates_levy_id_fkey"
 
 end

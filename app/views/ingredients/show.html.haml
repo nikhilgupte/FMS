@@ -15,9 +15,28 @@
     %th Code
     %td= @ingredient.code
   %tr
-    %th= @ingredient.tax.name
-    %td= number_to_percentage @ingredient.tax.amount
-    %th= @ingredient.custom_duty.name
-    %td= number_to_percentage @ingredient.custom_duty.amount
+    %th Tax
+    %td= @ingredient.tax
+    %th Custom Duty
+    %td= @ingredient.custom_duty
 
 %h2 Prices
+
+%table.list
+  %thead
+    %tr
+      %th{ :style => 'width: 50px' } Applicable from
+      %th{ :style => 'width: 10px' } Type
+      %th INR
+      %th USD
+      %th EUR
+      %th{ :style => 'width: 60%' } 
+  %tbody
+    - @ingredient.prices.reverse.each do |price|
+      %tr
+        %td= price.applicable_from.to_s(:long)
+        %td= price.calculated? ? 'Gross' : 'Net'
+        %td.numeric= number_to_currency price.inr, :unit => Price::SUPPORTED_CURRENCIES['INR']
+        %td.numeric= number_to_currency price.usd, :unit => Price::SUPPORTED_CURRENCIES['USD']
+        %td.numeric= number_to_currency price.eur, :unit => Price::SUPPORTED_CURRENCIES['EUR']
+        %td

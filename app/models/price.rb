@@ -2,12 +2,14 @@
 class Price < ActiveRecord::Base
 
   #SUPPORTED_CURRENCIES = %w(INR USD EUR)
-  SUPPORTED_CURRENCIES = { 'INR' => 'Rs', 'USD' => '$', 'EUR' => '€' }
+  SUPPORTED_CURRENCIES = { 'INR' => 'Rs. ', 'USD' => '$', 'EUR' => '€' }
 
   belongs_to :priceable, :polymorphic => true
   has_many :currencies, :class_name => 'PriceCurrency'
+  scope :net, where(:calculated => false)
+  scope :gross, where(:calculated => true)
 
-  default_scope order(:applicable_from)
+  default_scope order(:applicable_from, :id)
 
   class << self
     def current
@@ -20,11 +22,15 @@ class Price < ActiveRecord::Base
   end
 
   def in?(currency_code)
-    self.send("#{currency_code.to_s.downcase}?")
+    self.send("#{currency_code.to_s.downcase}").present?
   end
 
   def amount(currency_code)
     self.send("#{currency_code.to_s.downcase}")
+  end
+
+  def in(currency_code)
+    self.send currency_code.to_s.downcase
   end
 
   def to(currency_code)
@@ -33,6 +39,7 @@ class Price < ActiveRecord::Base
     else
       target_currency_rate = Currency.find_by_code!(currency_code).prices.last.inr
       SUPPORTED_CURRENCIES.keys.each do |supported_currency|
+        p "supported_currency: #{supported_currency}"
         if in?(supported_currency)
           supported_currency_rate = Currency.find_by_code!(supported_currency).prices.last.inr
           return amount(supported_currency) * supported_currency_rate / target_currency_rate
@@ -40,5 +47,6 @@ class Price < ActiveRecord::Base
       end
     end
   end
+
 
 end
