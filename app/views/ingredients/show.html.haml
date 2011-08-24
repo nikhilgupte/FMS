@@ -27,16 +27,20 @@
     %tr
       %th{ :style => 'width: 50px' } Applicable from
       %th{ :style => 'width: 10px' } Type
-      %th INR
-      %th USD
-      %th EUR
-      %th{ :style => 'width: 60%' } 
+      %th.numeric.border{ :style => 'width: 120px' } INR
+      %th.numeric.border{ :style => 'width: 120px' } USD
+      %th.numeric.border{ :style => 'width: 120px' } EUR
+      %th
   %tbody
-    - @ingredient.prices.reverse.each do |price|
+    - @ingredient.prices.chronological.reverse.each do |price|
       %tr
         %td= price.applicable_from.to_s(:long)
-        %td= price.calculated? ? 'Gross' : 'Net'
-        %td.numeric= number_to_currency price.inr, :unit => Price::SUPPORTED_CURRENCIES['INR']
-        %td.numeric= number_to_currency price.usd, :unit => Price::SUPPORTED_CURRENCIES['USD']
-        %td.numeric= number_to_currency price.eur, :unit => Price::SUPPORTED_CURRENCIES['EUR']
-        %td
+        %td= price.gross? ? 'Gross' : 'Net'
+        %td.border.numeric= number_to_currency price.inr, :unit => IngredientPrice::SUPPORTED_CURRENCIES['INR']
+        %td.border.numeric= number_to_currency price.usd, :unit => IngredientPrice::SUPPORTED_CURRENCIES['USD']
+        %td.border.numeric= number_to_currency price.eur, :unit => IngredientPrice::SUPPORTED_CURRENCIES['EUR']
+        %td.tip
+          - if price.gross?
+            == calculated on #{price.created_at.to_s(:long)}
+          - else
+            == updated on #{price.created_at.to_s(:long)}

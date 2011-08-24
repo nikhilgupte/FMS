@@ -1,0 +1,13 @@
+= form_for @price_list ||= IngredientPriceList.new(:applicable_from => Date.today), :remote => true do |form|
+  = form.error_messages
+  %fieldset 
+    %ol.form
+      %li
+        = form.label :applicable_from
+        = form.text_field :applicable_from, :class => 'date'
+        = reqd
+      %li
+        = form.label :audit_comment
+        = form.text_area :audit_comment, :class => 'tiny elastic'
+    %ol.buttons
+      %li= form.submit "Generate", :disable_with => "Please wait..."

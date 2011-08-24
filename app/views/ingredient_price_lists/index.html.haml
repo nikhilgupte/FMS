@@ -1,0 +1,31 @@
+- @page_title = 'Price Lists'
+
+%ul.buttons
+  %li
+    %a.primary.toggle{ :href => "#price_list_form"} + Generate Price List
+
+#price_list_form.hidden
+  = render 'form'
+
+%table.striped.list
+  %thead
+    %tr
+      %th Applicable from
+      %th Generated on
+      %th Size
+      %th By
+      %th{ :style => 'width:40%' } Comments
+      %th
+      %th
+  %tbody
+    - @price_lists.each do |price_list|
+      %tr
+        %td= price_list.applicable_from.to_s(:long)
+        %td= price_list.generated_at.to_s(:long)
+        %td= number_with_delimiter price_list.size
+        %td= price_list.generated_by
+        %td.tip= price_list.audits.last.try(:comment)
+        %td= link_to "Export", "#", :class => 'todo'
+        %td= link_to "Recalculate", price_list, :method => 'put', :confirm => 'This will take a few minutes. Proceed?'
+= will_paginate @price_lists
+

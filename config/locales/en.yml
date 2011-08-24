@@ -2,4 +2,12 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  errors:
+    messages:
+      invalid_date: "is not a valid date"
+      invalid_time: "is not a valid time"
+      invalid_datetime: "is not a valid datetime"
+      is_at: "must be at %{restriction}"
+      before: "must be before %{restriction}"
+      on_or_before: "must be on or before %{restriction}"
+      after: "must be after %{restriction}"

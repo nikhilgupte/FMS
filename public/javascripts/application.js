@@ -1,4 +1,7 @@
 $(function() {
+  $("input.date").datepicker({
+      dateFormat: 'yy-mm-dd'
+  });
   $('.hint').hint();
   $('textarea.elastic').elastic();
   $('.clickable').fitted();
@@ -6,7 +9,7 @@ $(function() {
     $($(this).attr('href')).toggle();
     if($(this).hasClass('more')) {
       $(this).text(($(this).text() == 'more') ? 'less' : 'more');
-    } else {
+    } else if($(this).hasClass('show')) {
       $(this).text(($(this).text() == 'show') ? 'hide' : 'show');
     }
     return false;

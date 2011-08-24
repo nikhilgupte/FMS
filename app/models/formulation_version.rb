@@ -35,7 +35,8 @@ class FormulationVersion < ActiveRecord::Base
   end
 
   def unit_price(currency_code = 'INR')
-    constituents.current.entries.sum{|c| c.price(currency_code)}
+    #constituents.current.entries.sum{|c| c.price(currency_code)}
+    constituents.price(Date.today, currency_code).to_f
   end
 
   def price_per_gram(currency_code)

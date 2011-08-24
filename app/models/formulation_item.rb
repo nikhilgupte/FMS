@@ -33,7 +33,8 @@ class FormulationItem < ActiveRecord::Base
   end
 
   def price(currency_code = 'INR')
-    constituents.as_on(as_on_date).entries.sum{|c| c.price(currency_code)}
+    #constituents.as_on(as_on_date).entries.sum{|c| c.price(currency_code)}
+    constituents.price(Date.today, currency_code).to_f
   end
   memoize :price
 

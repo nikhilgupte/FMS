@@ -8,7 +8,7 @@ class Levy < ActiveRecord::Base
   end
 
   def to_s
-    "#{rate}% #{name}"
+    "#{rate || 0}% #{name}"
   end
 
 end

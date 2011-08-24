@@ -9,7 +9,7 @@
   %tbody
     - items.each do |item|
       %tr
-        %td= item.compound
+        %td= link_to item.compound, item.compound
         %td.numeric
           = number_with_precision item.quantity, :precision => 3
         %td.numeric.quiet

@@ -16,7 +16,7 @@
         %td= link_to ingredient.code, ingredient
         %td= ingredient.name
         - if gross_price = ingredient.gross_price
-          - Price::SUPPORTED_CURRENCIES.each do |currency, symbol|
+          - IngredientPrice::SUPPORTED_CURRENCIES.each do |currency, symbol|
             %td.numeric.border
               = number_to_currency gross_price.in(currency), :unit => symbol
           %td= gross_price.applicable_from.to_s(:long)

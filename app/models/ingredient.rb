@@ -1,4 +1,5 @@
 class Ingredient < ActiveRecord::Base
+  acts_as_audited
 
   UNIT_WEIGHT = 1000
 
@@ -8,8 +9,9 @@ class Ingredient < ActiveRecord::Base
 
   auto_strip :name, :code
 
-  scope :with_price, lambda { |as_on = Date.today| where("ingredients.id in (select ingredient_id from ingredient_prices where applicable_from <= :applicable_from and ingredient_price_list_id is null)", :applicable_from => as_on) }
-  scope :with_name_or_code, lambda { |term| with_price.where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
+  scope :with_price, lambda { |as_on = Date.today| where("ingredients.id in (select ingredient_id from ingredient_prices where applicable_from <= :applicable_from)", :applicable_from => as_on) }
+  scope :with_gross_price, lambda { |as_on = Date.today| where("ingredients.id in (select ingredient_id from ingredient_prices where applicable_from <= :applicable_from and ingredient_price_list_id is not null)", :applicable_from => as_on) }
+  scope :with_name_or_code, lambda { |term| with_gross_price.where("name ILIKE :name OR lower(code) ILIKE :code", { :name => "%#{term}%", :code => "#{term}%" }) }
 
   def priced?
     prices.exists?

@@ -25,6 +25,7 @@ Fms::Application.routes.draw do
       get 'autocomplete'
     end
   end
+  resources :ingredient_price_lists, :only => [:create, :update, :index]
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

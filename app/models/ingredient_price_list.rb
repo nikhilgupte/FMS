@@ -1,12 +1,25 @@
 class IngredientPriceList < ActiveRecord::Base
+  acts_as_audited
 
-  has_many :ingredient_prices
+  default_scope order(:applicable_from)
 
-  validates :applicable_from, :timeliness => { :type => :date }, :uniqueness => true
+  has_many :ingredient_prices, :dependent => :delete_all
+
+  validates :applicable_from, :timeliness => { :type => :date }, :uniqueness => { :message => "must be unique" }
 
   def generate
-    Ingredient.with_price(applicable_from).each do |ingredient|
-      self.ingredient_prices << ingredient.build_gross_price(applicable_from)
+    transaction do
+      ingredient_prices.delete_all
+      Ingredient.with_price(applicable_from).each do |ingredient|
+        self.ingredient_prices << ingredient.build_gross_price(applicable_from)
+      end
+      self.size = ingredient_prices.size
+      self.generated_at = Time.now
+      save!
     end
+  end
+
+  def generated_by
+    audits.present? ? audits.first.user : nil
   end
 end

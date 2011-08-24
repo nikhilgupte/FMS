@@ -1,3 +1,8 @@
 - @tab = 'ingredients'
 = inside_layout 'application' do
+  - content_for :sub_menu do
+    %ul
+      %li{:class => controller_name == 'ingredients' ? 'current' : nil}= link_to_unless_current 'All Ingredients', ingredients_path
+      %li{:class => controller_name == 'ingredient_price_lists' ? 'current' : nil}= link_to_unless_current 'Price Lists', ingredient_price_lists_path
+
   = yield

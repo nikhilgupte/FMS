@@ -46,6 +46,6 @@ module ApplicationHelper
   end
 
   def current_tab?(tab)
-    @tab.to_sym == tab.to_sym
+    @tab && @tab.to_sym == tab.to_sym
   end
 end

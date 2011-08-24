@@ -1,17 +1,19 @@
 # coding: utf-8
 class IngredientPrice < ActiveRecord::Base
 
+  belongs_to :ingredient
+  acts_as_audited :associated_with => :ingredient
+
   SUPPORTED_CURRENCIES = { 'INR' => 'Rs. ', 'USD' => '$', 'EUR' => '€' }
 
   belongs_to :priceable, :polymorphic => true
   has_many :currencies, :class_name => 'PriceCurrency'
+  scope :chronological, order(:applicable_from.asc)
   scope :net, where(:ingredient_price_list_id => nil)
   scope :gross, where(:ingredient_price_list_id.ne => nil)
   scope :applicable_from, lambda { |applicable_from = Date.today| select('distinct on (ingredient_id) *').where(:applicable_from.lte => applicable_from).order('ingredient_id, applicable_from desc') }
 
   validates :applicable_from, :uniqueness => { :scope => :ingredient_id }, :if => :net?
-
-  #default_scope order(:applicable_from, :id)
 
   class << self
     def current
@@ -53,10 +55,12 @@ class IngredientPrice < ActiveRecord::Base
   end
 
 
-  private
-
   def net?
     ingredient_price_list_id.nil?
+  end
+
+  def gross?
+    ingredient_price_list_id.present?
   end
 
 end

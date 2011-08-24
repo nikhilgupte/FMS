@@ -1,0 +1,5 @@
+<% if @price_list.errors.present? %>
+  $('#price_list_form').html("<%= escape_javascript render(:partial => 'form') %>");
+<% else %>
+  window.location = '<%= ingredient_price_lists_path %>';
+<% end %>

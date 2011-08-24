@@ -119,6 +119,8 @@ ActiveRecord::Schema.define(:version => 20110823084224) do
 
   create_table "ingredient_price_lists", :force => true do |t|
     t.date     "applicable_from", :null => false
+    t.datetime "generated_at"
+    t.integer  "size"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -134,7 +136,7 @@ ActiveRecord::Schema.define(:version => 20110823084224) do
     t.integer  "ingredient_price_list_id"
   end
 
-  add_index "ingredient_prices", ["ingredient_id", "applicable_from"], :name => "index_ingredient_prices_on_ingredient_id_and_applicable_from", :unique => true
+  add_index "ingredient_prices", ["ingredient_id", "applicable_from"], :name => "index_ingredient_prices_on_ingredient_id_and_applicable_from"
   add_index "ingredient_prices", ["ingredient_price_list_id"], :name => "index_ingredient_prices_on_ingredient_price_list_id"
 
   create_table "ingredients", :force => true do |t|
@@ -218,7 +220,6 @@ ActiveRecord::Schema.define(:version => 20110823084224) do
   add_foreign_key "formulation_versions", ["formulation_id"], "formulations", ["id"], :on_delete => :cascade, :name => "formulation_versions_formulation_id_fkey"
 
   add_foreign_key "ingredient_prices", ["ingredient_id"], "ingredients", ["id"], :on_delete => :cascade, :name => "ingredient_prices_ingredient_id_fkey"
-  add_foreign_key "ingredient_prices", ["ingredient_price_list_id"], "ingredient_price_lists", ["id"], :on_delete => :cascade, :name => "ingredient_prices_ingredient_price_list_id_fkey"
 
   add_foreign_key "ingredients", ["custom_duty_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_custom_duty_id_fkey"
   add_foreign_key "ingredients", ["tax_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_tax_id_fkey"
