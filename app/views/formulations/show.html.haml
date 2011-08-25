@@ -1,13 +1,17 @@
 - @page_title = @formulation
 
-- if @formulation_version.current? && !@formulation_version.draft? && (draft_version = @formulation.draft_version).present?
+- if @formulation_version.draft?
   .notice
-    == View #{link_to 'Draft version', formulation_path(@formulation, { :version => :draft })} saved on #{draft_version.updated_at.to_s(:short)}
+    == You are viewing a draft version of this formulation. Switch to the #{link_to 'current version', @formulation} (published on #{@formulation.published_at.to_s(:short)})
+- else
+  - if @formulation_version.current? && !@formulation_version.draft? && (draft_version = @formulation.draft_version).present?
+    .notice
+      == View #{link_to 'Draft version', formulation_path(@formulation, { :version => :draft })} saved on #{draft_version.updated_at.to_s(:short)}
+  - if !@formulation_version.current?
+    .notice
+      == You are viewing an older version of this formulation. Switch to the #{link_to 'current version', @formulation} (published on #{@formulation.published_at.to_s(:short)})
 
-- if !@formulation_version.current?
-  .notice
-    == You are viewing an older version of this formulation. Switch to the #{link_to 'current version', @formulation} (published on #{@formulation.published_at.to_s(:short)})
-
+= render 'shared/price_preferences_form'
 %ul.buttons
   - if @formulation_version.current? || @formulation_version.draft?
     %li= link_to "Edit", [:edit, @formulation], :class => 'primary'

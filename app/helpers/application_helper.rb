@@ -48,4 +48,8 @@ module ApplicationHelper
   def current_tab?(tab)
     @tab && @tab.to_sym == tab.to_sym
   end
+
+  def current_currency
+    ThreadLocal.current_currency
+  end
 end

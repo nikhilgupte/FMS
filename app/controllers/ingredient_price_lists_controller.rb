@@ -17,6 +17,6 @@ class IngredientPriceListsController < ApplicationController
   def update
     @price_list = IngredientPriceList.find params[:id]
     @price_list.generate #OPTIMIZE: move into background
-    redirect_to ingredient_price_lists_url :flash => { :success => "Recalculated price list as on #{@price_list.applicable_from.to_s(:long)}" }
+    redirect_to ingredient_price_lists_url, :flash => { :success => "Recalculated price list as on #{@price_list.applicable_from.to_s(:long)}" }
   end
 end

@@ -7,7 +7,7 @@
         = form.text_field :applicable_from, :class => 'date'
         = reqd
       %li
-        = form.label :audit_comment
+        = form.label :audit_comment, "Comment"
         = form.text_area :audit_comment, :class => 'tiny elastic'
     %ol.buttons
       %li= form.submit "Generate", :disable_with => "Please wait..."

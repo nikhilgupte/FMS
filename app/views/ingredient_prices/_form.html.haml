@@ -1,0 +1,25 @@
+= form_for [@ingredient, @price ||= IngredientPrice.new()], :remote => true do |form|
+  = form.error_messages
+  %fieldset 
+    %ol.form
+      %li
+        = form.label :applicable_from
+        = form.text_field :applicable_from, :class => 'date'
+        = reqd
+      %li.inline
+        = form.label :prices
+        %ol
+          %li
+            = form.label :inr, "INR"
+            = form.text_field :inr, :class => 'numeric'
+          %li
+            = form.label :usd, "USD"
+            = form.text_field :usd, :class => 'numeric'
+          %li
+            = form.label :eur, "EUR"
+            = form.text_field :eur, :class => 'numeric'
+      %li
+        = form.label :audit_comment, "Comment"
+        = form.text_area :audit_comment, :class => 'tiny elastic'
+    %ol.buttons
+      %li= form.submit "Add", :disable_with => "Please wait..."

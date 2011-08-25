@@ -1,5 +1,5 @@
 class FormulationIngredient < ActiveRecord::Base
-  include SoftDeletable
+  #include SoftDeletable
   belongs_to :formulation_item
   belongs_to :ingredient
 
@@ -10,13 +10,20 @@ class FormulationIngredient < ActiveRecord::Base
   end
 
   class << self
-    def with_prices(as_on = Date.today, currency_code = 'INR')
+    #def with_prices(as_on = Date.today, currency_code = 'INR')
+    def with_prices(opts)
+      opts.reverse_merge!(ThreadLocal.price_preferences)
+      as_on = opts[:as_on]
+      currency_code = opts[:currency_code]
+
       prices = "(SELECT distinct on (ingredient_id) * FROM ingredient_prices WHERE ingredient_prices.ingredient_price_list_id is not null and ingredient_prices.applicable_from <= '#{as_on.to_date.to_s(:db)}' ORDER BY ingredient_id, applicable_from desc) as prices"
-      as_on(as_on).joins("inner join #{prices} on prices.ingredient_id = formulation_ingredients.ingredient_id").select("(#{currency_code.to_s.downcase} / 1000) as amount")
+      joins("inner join #{prices} on prices.ingredient_id = formulation_ingredients.ingredient_id").select("(#{currency_code.to_s.downcase} / 1000) as amount")
     end
 
-    def price(as_on = Date.today, currency_code = 'INR')
-      with_prices.sum("formulation_ingredients.quantity * (#{currency_code.to_s.downcase} / 1000)")
+    #def price(as_on = Date.today, currency_code = 'INR')
+    def price(opts = {})
+      opts.reverse_merge! ThreadLocal.price_preferences
+      with_prices(opts).sum("formulation_ingredients.quantity * (#{opts[:currency_code].to_s.downcase} / 1000)")
     end
   end
 end

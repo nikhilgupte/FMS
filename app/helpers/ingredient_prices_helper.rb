@@ -1,0 +1,2 @@
+module IngredientPricesHelper
+end

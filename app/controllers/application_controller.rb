@@ -1,17 +1,17 @@
 class ApplicationController < ActionController::Base
-  before_filter :require_user, :set_time_zone
+  before_filter :require_user, :set_time_zone, :set_price_preferences
   protect_from_forgery
 
-  helper_method :current_user, :logged_in?, :current_currency
-
-  def current_currency
-    Currency.find_by_code! params[:currency] || :inr
-  end
+  helper_method :current_user, :logged_in?
 
   private
 
   def set_time_zone
     Time.zone = current_user.time_zone if logged_in?
+  end
+
+  def set_price_preferences
+    ThreadLocal.price_preferences = params[:price_preferences]
   end
 
   def current_user_session

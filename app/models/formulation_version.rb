@@ -30,21 +30,17 @@ class FormulationVersion < ActiveRecord::Base
     items.current.sum(:quantity)
   end
 
-  def total_quantity
-    items.current.sum(:quantity)
+  def unit_price(opts = {})
+    constituents.price(opts).to_f
+  end
+  memoize :unit_price
+
+  def price_per_gram(opts = {})
+    unit_price(opts) / net_weight
   end
 
-  def unit_price(currency_code = 'INR')
-    #constituents.current.entries.sum{|c| c.price(currency_code)}
-    constituents.price(Date.today, currency_code).to_f
-  end
-
-  def price_per_gram(currency_code)
-    unit_price(currency_code) / net_weight
-  end
-
-  def price_per_kilogram(currency_code)
-    price_per_gram(currency_code) * 1000
+  def price_per_kilogram(opts = {})
+    price_per_gram(opts) * 1000
   end
 
   def current?

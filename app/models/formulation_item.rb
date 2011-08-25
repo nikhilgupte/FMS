@@ -21,22 +21,21 @@ class FormulationItem < ActiveRecord::Base
   acts_as_audited :associated_with => :formulation_version
 
   def quantity_percentage
-    quantity * 100.0 / formulation_version.total_quantity
+    quantity * 100.0 / formulation_version.net_weight
   end
 
-  def price_percentage(currency_code)
-    price(currency_code) * 100 / formulation_version.unit_price(currency_code) rescue nil
+  #def price(currency_code = 'INR')
+  def price(opts = {})
+    constituents.price(opts).to_f
+  end
+
+  def price_percentage(opts = {})
+    price(opts) * 100 / formulation_version.unit_price(opts) rescue nil
   end
 
   def to_s
     [compound.to_s, "#{quantity} gms"].join(' - ')
   end
-
-  def price(currency_code = 'INR')
-    #constituents.as_on(as_on_date).entries.sum{|c| c.price(currency_code)}
-    constituents.price(Date.today, currency_code).to_f
-  end
-  memoize :price
 
   def as_on_date
     @as_on_date ||= Time.now

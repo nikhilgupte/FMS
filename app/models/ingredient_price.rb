@@ -13,7 +13,8 @@ class IngredientPrice < ActiveRecord::Base
   scope :gross, where(:ingredient_price_list_id.ne => nil)
   scope :applicable_from, lambda { |applicable_from = Date.today| select('distinct on (ingredient_id) *').where(:applicable_from.lte => applicable_from).order('ingredient_id, applicable_from desc') }
 
-  validates :applicable_from, :uniqueness => { :scope => :ingredient_id }, :if => :net?
+  validates :applicable_from, :timeliness => { :type => :date }, :uniqueness => { :scope => :ingredient_id, :message => "must be unique" }, :if => :net?
+  validate :atleast_one_price
 
   class << self
     def current
@@ -22,7 +23,7 @@ class IngredientPrice < ActiveRecord::Base
 
     def as_on(date)
       #where(:applicable_from.lte => date.to_date).last
-      applicable_from(date.to_date).last
+      applicable_from(date.to_date).first
     end
   end
 
@@ -63,4 +64,11 @@ class IngredientPrice < ActiveRecord::Base
     ingredient_price_list_id.present?
   end
 
+  private
+
+  def atleast_one_price
+    unless inr || usd || eur
+      errors.add(:base, "At least one price should be entered")
+    end
+  end
 end

@@ -24,6 +24,7 @@ Fms::Application.routes.draw do
     collection do
       get 'autocomplete'
     end
+    resources :ingredient_prices, :only => [:create]
   end
   resources :ingredient_price_lists, :only => [:create, :update, :index]
 

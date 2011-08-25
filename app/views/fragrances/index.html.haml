@@ -19,10 +19,10 @@
       %th Updated
   %tbody
     - @fragrances.each do |fragrance|
-      %tr
+      %tr.clickable
         %td= fragrance.state
         %td= link_to fragrance.code, fragrance
-        %td= link_to fragrance.name, fragrance
+        %td= fragrance.name
         %td= fragrance.product_year
         %td== #{fragrance.owner}
         %td{ :title => fragrance.updated_at.to_s(:long)}== #{time_ago_in_words fragrance.updated_at} ago

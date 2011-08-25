@@ -1,0 +1,12 @@
+#price_preferences
+  %span.tip prices in
+  = current_currency.code
+  %span.tip as on
+  = ThreadLocal.current_as_on.to_s(:long)
+  %a.toggle.small{ :href => "#price_preference_form" } change
+  #price_preference_form.hidden
+    = form_tag nil, :method => :get do
+      = label_tag "price_preferences[currency_code]", "Currency"
+      = select_tag "price_preferences[currency_code]", options_for_select(IngredientPrice::SUPPORTED_CURRENCIES.keys, ThreadLocal.current_currency.code)
+      = text_field_tag "price_preferences[as_on]", ThreadLocal.current_as_on.to_s(:db), :class => 'date'
+      = submit_tag 'Go'

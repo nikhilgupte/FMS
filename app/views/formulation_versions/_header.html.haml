@@ -20,11 +20,11 @@
       %span.tip grams
   %tr
     %th Unit Price
-    %td{ :colspan => 3 }= number_to_currency formulation_version.unit_price(current_currency.code), :unit => current_currency.symbol
+    %td{ :colspan => 3 }= number_to_currency formulation_version.unit_price, :unit => current_currency.symbol
   %tr
     %th Price
     %td{ :colspan => 3 }
-      == #{number_to_currency(formulation_version.price_per_kilogram(current_currency.code), :unit => current_currency.symbol)}
+      == #{number_to_currency(formulation_version.price_per_kilogram, :unit => current_currency.symbol)}
       %span.tip per kg
   %tr
     %th

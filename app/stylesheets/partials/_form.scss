@@ -296,3 +296,19 @@ label.inline {
 input.date {
 	width: 100px!important;
 }
+
+li.inline {
+	ol {
+		padding: 0;
+		@include clearfix;
+		li { 
+			padding: 0!important;
+			margin: 0!important;
+			margin-right: 30px!important;
+			float: left;
+		}
+		label {
+			width: auto!important;
+		}
+	}
+}
