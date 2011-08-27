@@ -8,23 +8,4 @@
 %ul.buttons
   %li= link_to "+ Create Accord", new_accord_path, :class => 'primary'
 
-%table.striped.list
-  %thead
-    %tr
-      %th State
-      %th Code
-      %th Name
-      %th Year
-      %th Owner
-      %th Updated
-  %tbody
-    - @accords.each do |accord|
-      %tr
-        %td= accord.state
-        %td= link_to accord.code, accord
-        %td= link_to accord.name, accord
-        %td= accord.product_year
-        %td== #{accord.owner}
-        %td{ :title => accord.updated_at.to_s(:long)}== #{time_ago_in_words accord.updated_at} ago
-
-= will_paginate @accords
+= render :partial => 'formulations/list', :locals => { :formulations => @accords }

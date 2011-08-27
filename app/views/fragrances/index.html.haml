@@ -1,0 +1,11 @@
+- @page_title = 'Frangrances'
+
+- content_for :page_header do
+  .search_box
+    - form_tag nil, :class => 'todo' do
+      = text_field_tag :q, nil, :class => :hint, :title => 'Search by name or code'
+
+%ul.buttons
+  %li= link_to "+ Create Fragrance", [:new, :fragrance], :class => 'primary'
+
+= render :partial => 'formulations/list', :locals => { :formulations => @fragrances }

@@ -2,9 +2,7 @@ class AccordsController < FormulationsController
   layout 'formulations'
 
   def index
-    @page_title = "Accords"
-    @formulations = Accord.all.paginate :page => params[:page], :per_page => 20
-    render "formulations/index"
+    @accords = Accord.all.paginate :page => params[:page], :per_page => 20
   end
 
   def new
