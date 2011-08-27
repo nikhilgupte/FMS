@@ -2,7 +2,9 @@ class FragrancesController < FormulationsController
   layout 'formulations'
 
   def index
-    @fragrances = Fragrance.all.paginate :page => params[:page], :per_page => 20
+    @page_title = "Fragrances"
+    @formulations = Fragrance.all.paginate :page => params[:page], :per_page => 20
+    render "formulations/index"
   end
 
   def new

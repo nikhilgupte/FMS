@@ -2,6 +2,7 @@
 .DS_Store
 log/*.log
 tmp/**/*
+tmp/*
 config/database.yml
 notes.txt
 tp

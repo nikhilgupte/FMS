@@ -7,7 +7,6 @@ class FormulationsController < ApplicationController
     else
       @formulation_version = @formulation.current_version
     end
-    @items = @formulation_version.items.current
     render "formulations/show"
   end
 

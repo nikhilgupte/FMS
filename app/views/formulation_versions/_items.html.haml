@@ -7,7 +7,7 @@
       %th{ :style => 'text-align: center;', :colspan => 2 } Quantity (grams)
       %th{ :style => 'text-align: center;', :colspan => 2 }== Price
   %tbody
-    - items.each do |item|
+    - formulation_version.items.current.each do |item|
       %tr
         %td= link_to item.compound, item.compound
         %td.numeric

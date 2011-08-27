@@ -1,0 +1,29 @@
+- content_for :page_header do
+  .search_box
+    - form_tag nil, :class => 'todo' do
+      = text_field_tag :q, nil, :class => :hint, :title => 'Search by name or code'
+
+%ul.buttons
+  %li= link_to "+ Create Fragrance", { :action => :new }, :class => 'primary'
+
+- if @formulations.present? 
+  %table.striped.list
+    %thead
+      %tr
+        %th State
+        %th Code
+        %th Name
+        %th Year
+        %th Owner
+        %th Updated
+    %tbody
+      - @formulations.each do |formulation|
+        %tr.clickable
+          %td= formulation.state
+          %td= link_to formulation.code, formulation
+          %td= formulation.name
+          %td= formulation.product_year
+          %td== #{formulation.owner}
+          %td{ :title => formulation.updated_at.to_s(:long)}== #{time_ago_in_words formulation.updated_at} ago
+  
+  = will_paginate @formulations

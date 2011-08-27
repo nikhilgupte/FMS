@@ -75,12 +75,12 @@ class FormulationItem < ActiveRecord::Base
   end
 
   def explode!
-    constituents.destroy_all    
+    constituents.delete_all    
     unless self.deleted?
       if compound.is_a?(Ingredient)
         constituents.create! :ingredient => compound, :quantity => self.quantity
       else
-        compound.constituents.current.each do |i|
+        compound.constituents.each do |i|
           constituents.create! :ingredient => i.ingredient, :quantity => (i.quantity / compound.net_weight) * self.quantity
         end
       end
