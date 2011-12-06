@@ -7,9 +7,9 @@ gem 'rails', '3.0.10'
 
 gem 'pg'
 
-gem 'rake', '~> 0.8.7'
+#gem 'rake', '~> 0.8.7'
 gem "acts_as_audited", "2.0.0.rc7", :git => 'https://github.com/collectiveidea/acts_as_audited.git'
-gem "authlogic", :git => "https://github.com/lichtamberg/authlogic.git"
+gem "authlogic" #, :git => "https://github.com/lichtamberg/authlogic.git"
 gem "compass"
 gem "will_paginate"
 gem "settingslogic"
@@ -34,3 +34,4 @@ gem "meta_where"
 gem "meta_search"
 #gem "squeel", :git => "git://github.com/ernie/squeel.git"
 gem 'validates_timeliness'
+gem "heroku", :group => [:development]

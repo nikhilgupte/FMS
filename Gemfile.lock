@@ -11,13 +11,6 @@ GIT
     acts_as_audited (2.0.0.rc7)
       rails (>= 3.0.3)
 
-GIT
-  remote: https://github.com/lichtamberg/authlogic.git
-  revision: 2eec1f71ce1d8e24c94cce1b6a2e60c47a65a360
-  specs:
-    authlogic (2.1.6)
-      activesupport
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -49,6 +42,9 @@ GEM
       activesupport (= 3.0.10)
     activesupport (3.0.10)
     arel (2.0.10)
+    authlogic (3.1.0)
+      activerecord (>= 3.0.7)
+      activerecord (>= 3.0.7)
     builder (2.1.2)
     capistrano (2.6.0)
       highline
@@ -107,6 +103,11 @@ GEM
       activesupport (~> 3.0)
       haml (~> 3.0)
       railties (~> 3.0)
+    heroku (2.15.1)
+      launchy (>= 0.3.2)
+      rest-client (~> 1.6.1)
+      rubyzip
+      term-ansicolor (~> 1.0.5)
     highline (1.6.2)
     i18n (0.5.0)
     json (1.5.1)
@@ -164,7 +165,7 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (~> 0.14.4)
-    rake (0.8.7)
+    rake (0.9.2.2)
     rdoc (3.9.2)
     remarkable (4.0.0.alpha4)
       rspec (>= 2.0.0.alpha11)
@@ -175,6 +176,8 @@ GEM
       remarkable (~> 4.0.0.alpha4)
       remarkable_activemodel (~> 4.0.0.alpha4)
       rspec (>= 2.0.0.alpha11)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
     rspec (2.6.0)
       rspec-core (~> 2.6.0)
       rspec-expectations (~> 2.6.0)
@@ -219,7 +222,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_audited (= 2.0.0.rc7)!
-  authlogic!
+  authlogic
   capistrano
   capybara
   compass
@@ -231,6 +234,7 @@ DEPENDENCIES
   factory_girl_rails (>= 1.0.0)
   fuubar
   haml-rails (>= 0.3.4)
+  heroku
   launchy
   meta_search
   meta_where
@@ -238,7 +242,6 @@ DEPENDENCIES
   pg
   pickle
   rails (= 3.0.10)
-  rake (~> 0.8.7)
   remarkable_activerecord (>= 4.0.0.alpha2)
   rspec-rails (>= 2.2.1)
   seed-fu
