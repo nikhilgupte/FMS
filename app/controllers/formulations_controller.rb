@@ -16,9 +16,4 @@ class FormulationsController < ApplicationController
     render "formulations/edit"
   end
 
-  def publish
-    @formulation = Formulation.find params[:id]
-    @formulation.draft_version.publish!
-    redirect_to @formulation, :flash => { :success => "#{@formulation.class.name} published" }
-  end
 end

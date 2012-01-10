@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110823084224) do
+ActiveRecord::Schema.define(:version => 20120110063115) do
 
   create_table "_delme", :id => false, :force => true do |t|
     t.integer  "id"
@@ -56,9 +56,6 @@ ActiveRecord::Schema.define(:version => 20110823084224) do
     t.string   "symbol"
   end
 
-  add_index "currencies", ["code"], :name => "index_currencies_on_code", :unique => true, :case_sensitive => false
-  add_index "currencies", ["name"], :name => "index_currencies_on_name", :unique => true, :case_sensitive => false
-
   create_table "formulation_ingredients", :force => true do |t|
     t.integer  "formulation_item_id"
     t.integer  "ingredient_id"
@@ -85,7 +82,6 @@ ActiveRecord::Schema.define(:version => 20110823084224) do
 
   create_table "formulation_versions", :force => true do |t|
     t.integer  "formulation_id",     :null => false
-    t.string   "name",               :null => false
     t.string   "state",              :null => false
     t.text     "top_note"
     t.text     "middle_note"
@@ -111,11 +107,11 @@ ActiveRecord::Schema.define(:version => 20110823084224) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "versions_count",     :default => 0, :null => false
+    t.string   "name",                              :null => false
   end
 
   add_index "formulations", ["owner_id"], :name => "index_formulations_on_owner_id"
   add_index "formulations", ["type"], :name => "index_formulations_on_type"
-  add_index "formulations", ["code"], :name => "index_formulations_on_code", :unique => true, :case_sensitive => false
 
   create_table "ingredient_price_lists", :force => true do |t|
     t.date     "applicable_from", :null => false
@@ -150,7 +146,6 @@ ActiveRecord::Schema.define(:version => 20110823084224) do
 
   add_index "ingredients", ["custom_duty_id"], :name => "index_ingredients_on_custom_duty_id"
   add_index "ingredients", ["tax_id"], :name => "index_ingredients_on_tax_id"
-  add_index "ingredients", ["code"], :name => "index_ingredients_on_code", :unique => true, :case_sensitive => false
 
   create_table "levies", :force => true do |t|
     t.string   "type",       :null => false
@@ -158,8 +153,6 @@ ActiveRecord::Schema.define(:version => 20110823084224) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "levies", ["type", "name"], :name => "index_levies_on_type_and_name", :unique => true, :case_sensitive => false
 
   create_table "levy_rates", :force => true do |t|
     t.integer  "levy_id",         :null => false
@@ -209,21 +202,5 @@ ActiveRecord::Schema.define(:version => 20110823084224) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true, :case_sensitive => false
-  add_index "users", ["prefix"], :name => "index_users_on_prefix", :unique => true, :case_sensitive => false
-
-  add_foreign_key "formulation_ingredients", ["formulation_item_id"], "formulation_items", ["id"], :on_delete => :cascade, :name => "formulation_ingredients_formulation_item_id_fkey"
-
-  add_foreign_key "formulation_items", ["formulation_version_id"], "formulation_versions", ["id"], :on_delete => :cascade, :name => "formulation_items_formulation_version_id_fkey"
-
-  add_foreign_key "formulation_versions", ["formulation_id"], "formulations", ["id"], :on_delete => :cascade, :name => "formulation_versions_formulation_id_fkey"
-
-  add_foreign_key "ingredient_prices", ["ingredient_id"], "ingredients", ["id"], :on_delete => :cascade, :name => "ingredient_prices_ingredient_id_fkey"
-
-  add_foreign_key "ingredients", ["custom_duty_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_custom_duty_id_fkey"
-  add_foreign_key "ingredients", ["tax_id"], "levies", ["id"], :on_delete => :restrict, :name => "ingredients_tax_id_fkey"
-
-  add_foreign_key "levy_rates", ["levy_id"], "levies", ["id"], :on_delete => :cascade, :name => "levy_rates_levy_id_fkey"
 
 end

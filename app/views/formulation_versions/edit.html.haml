@@ -1,10 +1,9 @@
-- @page_title = "Edit: #{@formulation}"
+- @page_title = "Edit: #{@formulation_version}"
 
-= form_for @formulation do |form|
-  = render :partial => 'formulations/form', :object => form
+= form_for @formulation_version do |form|
+  = form.error_messages
+  = render form
   %fieldset
     %ol.buttons
       %li= form.submit "Save #{@formulation.class.name}", :class => :primary
       %li= cancel_link(@formulation)
-
-

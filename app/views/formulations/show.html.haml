@@ -6,19 +6,17 @@
     - if @formulation.published?
       == Switch to the #{link_to 'current version', @formulation} (published on #{@formulation.published_at.to_s(:short)})
 - else
-  - if @formulation_version.current? && !@formulation_version.draft? && (draft_version = @formulation.draft_version).present?
-    .notice
-      == View #{link_to 'Draft version', formulation_path(@formulation, { :version => :draft })} saved on #{draft_version.updated_at.to_s(:short)}
   - if !@formulation_version.current?
     .notice
-      == You are viewing an older version of this formulation. Switch to the #{link_to 'current version', @formulation} (published on #{@formulation.published_at.to_s(:short)})
+      == You aren't viewing the current version of this formulation. Switch to the #{link_to 'current version', @formulation} (published on #{@formulation.published_at.to_s(:short)})
 
 = render 'shared/price_preferences_form'
 %ul.buttons
   - if @formulation_version.current? || @formulation_version.draft?
-    %li= link_to "Edit", [:edit, @formulation], :class => 'primary'
+    %li= link_to "Edit", [:edit, @formulation_version], :class => "primary #{'disabled' if @formulation_version.published?}"
+    %li= link_to "New Version", new_fragrance_formulation_version_path(@formulation, :version_id => @formulation_version.id)
   - if @formulation_version.draft?
-    %li= link_to "Publish", [:publish, @formulation], :method => :put
+    %li= link_to "Publish", [:publish, @formulation_version], :method => :put, :confirm => 'Really publish this version?'
   %li.select
     %a More
     %ul

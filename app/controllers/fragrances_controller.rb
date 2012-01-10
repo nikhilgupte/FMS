@@ -7,7 +7,8 @@ class FragrancesController < FormulationsController
 
   def new
     @formulation = Fragrance.new
-    @formulation.build_draft_version.init
+    #@formulation.build_draft_version.init
+    @formulation.versions.build.init
     render "formulations/new"
   end
 
@@ -23,7 +24,7 @@ class FragrancesController < FormulationsController
   def update
     @formulation = Fragrance.find params[:id]
     if @formulation.update_attributes params[:fragrance]
-      redirect_to fragrance_url(@formulation, :version => 'draft'), :flash => { :success => "Fragrance updated" }
+      redirect_to @formulation, :flash => { :success => "Fragrance updated" }
     else
       render "formulations/edit"
     end

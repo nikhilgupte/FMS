@@ -80,7 +80,8 @@ class FormulationVersion < ActiveRecord::Base
   end
 
   def to_s
-    version_number
+    #version_number
+    "#{name} (##{formulation.code} / #{version_number})"
   end
 
   def update_accord!(accord)
@@ -91,9 +92,9 @@ class FormulationVersion < ActiveRecord::Base
   end
 
   def build_copy
-    copy = formulation.versions.build self.attributes
-    items.current.each{|i| copy.items.build i.attributes}
-    copy
+    formulation.versions.build(self.attributes).tap do |copy|
+      items.current.each{|i| copy.items.build i.attributes}
+    end
   end
 
   private

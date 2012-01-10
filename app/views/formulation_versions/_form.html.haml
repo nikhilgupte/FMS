@@ -18,10 +18,6 @@
   = form.fields_for :items do |item_form|
     = render :partial => 'formulations/item_form', :locals => { :form => item_form }
 .add_child= add_nested_fields_for(form, :items, 'items', { :label => '+ Add Item', :partial => 'formulations/item_form', :object => FormulationItem.new })
-%fieldset
-  %ol.buttons
-    %li= form.submit "Save #{@formulation.class.name}", :class => :primary
-    %li= cancel_link(@formulation)
 
 - content_for :tail do
   :javascript

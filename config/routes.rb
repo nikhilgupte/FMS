@@ -2,11 +2,14 @@ Fms::Application.routes.draw do
 
   root :to => "fragrances#index"
   resource :session, :only => [:new, :create, :destroy]
+  #resources :formulations, :except => [:destroy] do
+    #resources :formulation_versions, :except => [:destroy], :path => 'versions', :shallow => true
+  #end
+
   resources :fragrances, :except => [:destroy] do
-    member do
-      put :publish
+    resources :formulation_versions, :except => [:destroy], :path => 'versions', :shallow => true do
+      put 'publish', :on => :member
     end
-    resources :formulation_versions, :except => [:destroy], :path => 'versions'
   end
 
   resources :accords, :except => [:destroy] do

@@ -1,6 +1,10 @@
 - @page_title = "New #{@formulation.class.name}"
 
 = form_for @formulation do |form|
-  = form.error_messages
-  = form.fields_for :draft_version do |version_form|
+  = render :partial => 'formulations/form', :object => form
+  = form.fields_for :versions do |version_form|
     = render :partial => 'formulation_versions/form', :object => version_form
+  %fieldset
+    %ol.buttons
+      %li= form.submit "Save #{@formulation.class.name}", :class => :primary
+      %li= cancel_link(@formulation)
