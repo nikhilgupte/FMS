@@ -4,23 +4,27 @@
   %li
     = link_to "&laquo; Current version".html_safe, @formulation, :class => 'primary'
 
-%h3 History
+%h3 Versions
+.tip Current version is highlighted
 
 %table.list
   %thead
     %tr
       %th Version
+      %th State
       %th Date
       %th By
       %th{ :colspan => 2 } Changes
   %tbody
     - @versions.each do |version|
-      %tr.em
+      %tr{ :class => version.current? ? 'highlight' : nil }
         - rowspan = version.changes.count + 1
-        %td{ :rowspan => rowspan }= link_to version, version
+        %td{ :rowspan => rowspan }
+          = link_to version, version
+        %td{ :rowspan => rowspan }= version.state
         - version.changes.each do |change|
-          %tr
-            %td{ :style => 'width: 50px' }= change.created_at.to_s(:short)
+          %tr{ :class => version.current? ? 'highlight' : nil }
+            %td{ :style => 'width: 50px;border-left: 1px solid #eee' }= change.created_at.to_s(:short)
             %td= change.user
             - unless change.comment.present?
               %td{ :style => 'width: 30px' }= display_audit_action change
@@ -29,6 +33,8 @@
                   = change.auditable.revision_at(change.created_at + 1)
                 - elsif change.action != 'create'
                   = change.audited_changes.keys.collect(&:humanize).join(", ")
+                - elsif change.action == 'create' && version.parent_version.present?
+                  == based on #{link_to version.parent_version, version.parent_version}
             - else
-              %td{ :colspan => 2}= change.comment
-
+              %td{ :colspan => 2}
+                = change.comment

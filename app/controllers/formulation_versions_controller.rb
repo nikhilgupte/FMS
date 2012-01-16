@@ -21,12 +21,30 @@ class FormulationVersionsController < ApplicationController
     end
   end
 
+  def show
+    @formulation_version = FormulationVersion.find params[:id]
+    @formulation = @formulation_version.formulation
+  end
+
   def edit
     @formulation_version = FormulationVersion.find params[:id]
     @formulation = @formulation_version.formulation
-    if @formulation_version.published?
+    unless @formulation_version.editable?
       redirect_to :back, :notice => "This version cannot be modified"
     end
+  end
+
+  def update
+    @formulation_version = FormulationVersion.find params[:id]
+    unless @formulation_version.editable?
+      redirect_to :back, :notice => "This version cannot be modified"
+    end
+    if @formulation_version.update_attributes params[:formulation_version]
+      redirect_to @formulation_version, :flash => { :success => "Fragrance updated" }
+    else
+      @formulation = @formulation_version.formulation
+    end
+
   end
 
   def publish

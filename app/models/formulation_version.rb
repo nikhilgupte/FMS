@@ -3,11 +3,12 @@ class FormulationVersion < ActiveRecord::Base
   acts_as_audited
   has_associated_audits
 
-  STATES = %w(draft published)
+  STATES = %w(draft published obsolete)
 
   delegate :code, :owner, :product_year, :origin_formula_id, :to => :formulation
 
   belongs_to :formulation, :counter_cache => :versions_count
+  belongs_to :parent_version, :class_name => 'FormulationVersion'
   has_many :items, :class_name => 'FormulationItem', :dependent => :delete_all
   has_many :constituents, :through => :items
 
@@ -25,6 +26,7 @@ class FormulationVersion < ActiveRecord::Base
 
   default_scope order('formulation_versions.id desc')
   scope :drafts, where(:state => 'draft')
+  scope :published, where(:state => 'published')
 
   def net_weight
     items.current.sum(:quantity)
@@ -60,8 +62,13 @@ class FormulationVersion < ActiveRecord::Base
     state == 'published'
   end
 
+  def editable?
+    draft?
+  end
+
   def publish!
     transaction do
+      formulation.versions.published.update_all(:state => 'obsolete')
       self.state = 'published'
       self.published_at = Time.now
       self.audit_comment = "Published" unless self.audit_comment.present?
@@ -94,6 +101,7 @@ class FormulationVersion < ActiveRecord::Base
   def build_copy
     formulation.versions.build(self.attributes).tap do |copy|
       items.current.each{|i| copy.items.build i.attributes}
+      copy.parent_version = self
     end
   end
 

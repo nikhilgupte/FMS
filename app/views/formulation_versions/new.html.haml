@@ -3,8 +3,9 @@
 = form_for [@formulation, @version] do |form|
   = form.error_messages
   = render form
+
   %fieldset
     %ol.buttons
-      %li= form.submit "Save #{@formulation.class.name}", :class => :primary
+      %li= form.submit "Save", :class => :primary
       %li= cancel_link(@formulation)
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120110063115) do
+ActiveRecord::Schema.define(:version => 20120116104816) do
 
   create_table "_delme", :id => false, :force => true do |t|
     t.integer  "id"
@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(:version => 20120110063115) do
 
   create_table "formulation_versions", :force => true do |t|
     t.integer  "formulation_id",     :null => false
+    t.string   "name",               :null => false
     t.string   "state",              :null => false
     t.text     "top_note"
     t.text     "middle_note"
@@ -91,10 +92,12 @@ ActiveRecord::Schema.define(:version => 20120110063115) do
     t.string   "version_number",     :null => false
     t.datetime "published_at"
     t.datetime "version_updated_at"
+    t.integer  "parent_version_id"
   end
 
   add_index "formulation_versions", ["formulation_id"], :name => "index_formulation_versions_on_formulation_id"
   add_index "formulation_versions", ["formulation_id", "version_number"], :name => "index_formulation_versions_on_formulation_id_and_version_number", :unique => true
+  add_index "formulation_versions", ["parent_version_id"], :name => "index_formulation_versions_on_parent_version_id"
   add_index "formulation_versions", ["state"], :name => "index_formulation_versions_on_state"
 
   create_table "formulations", :force => true do |t|
@@ -107,7 +110,6 @@ ActiveRecord::Schema.define(:version => 20120110063115) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "versions_count",     :default => 0, :null => false
-    t.string   "name",                              :null => false
   end
 
   add_index "formulations", ["owner_id"], :name => "index_formulations_on_owner_id"

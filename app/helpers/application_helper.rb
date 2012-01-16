@@ -32,9 +32,9 @@ module ApplicationHelper
     end
   end
 
-  def formulation_version_path(formulation_version)
-    formulation_path(formulation_version.formulation, :version => formulation_version.version_number)
-  end
+#  def formulation_version_path(formulation_version)
+#    formulation_path(formulation_version.formulation, :version => formulation_version.version_number)
+#  end
 
   def formulation_path(formulation, opts = {})
     if formulation.is_a?(Fragrance)

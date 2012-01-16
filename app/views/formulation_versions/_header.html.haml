@@ -14,17 +14,14 @@
     %th== #{formulation_version.published? ? 'Published' : 'Created'} on
     %td= (formulation_version.published? ? formulation_version.published_at : formulation_version.created_at).to_s(:long)
   %tr
-    %th Unit Price
-    %td= number_to_currency formulation_version.unit_price, :unit => current_currency.symbol
+    %th Price
+    %td.loud
+      == #{number_to_currency(formulation_version.price_per_kilogram, :unit => current_currency.symbol)}
+      %span.tip per kg
     %th Net Weight
     %td
       == #{number_with_precision formulation_version.net_weight, :precision => 3}
       %span.tip grams
-  %tr
-    %th Price
-    %td.loud{ :colspan => 3 }
-      == #{number_to_currency(formulation_version.price_per_kilogram, :unit => current_currency.symbol)}
-      %span.tip per kg
   %tr
     %th
     %td{ :colspan => 3}

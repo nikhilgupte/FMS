@@ -1,5 +1,10 @@
 %fieldset 
   %ol.form
+    - if(parent_version = form.object.parent_version).present?
+      %li
+        = form.label :parent_version_id, "Based on"
+        %input{ :type => 'text', :value => parent_version.to_s, :readonly => true }
+        = form.hidden_field :parent_version_id
     %li
       = form.label :name
       = form.text_field :name
