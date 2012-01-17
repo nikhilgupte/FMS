@@ -62,7 +62,7 @@ form {
 		li {
 			list-style-type: none!important;
 			float: left;
-			margin: 5px 15px;
+			margin: 5px 10px;
 		}
 		input[type=text] {
 			width: 90%;
@@ -310,4 +310,13 @@ li.inline {
 			width: auto!important;
 		}
 	}
+}
+
+.prices_form {
+	td { vertical-align: top; }
+	tr { border-bottom: 1px solid #eee; }
+	tfoot td { padding-top: 10px!important; font-weight: bold; }
+	label { font-weight: bold; display: block; }
+	.numeric { width: 70px!important }
+	.compound { width: 200px }
 }

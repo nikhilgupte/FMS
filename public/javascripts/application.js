@@ -23,13 +23,13 @@ $(function() {
 
   $('.remove input:checkbox').change(function() {
     if($(this).is(':checked')) {
-      $(this).parents('ol').addClass('removed');
+      $(this).parents('.row').addClass('removed');
     } else {
-      $(this).parents('ol').removeClass('removed');
+      $(this).parents('.row').removeClass('removed');
     }
   });
   $('body').delegate(".remove a", "click", function() {
-    $(this).parents('ol').fadeOut('slow', function() { $(this).remove()});
+    $(this).parents('.row').fadeOut('slow', function() { $(this).remove()});
     return false;
   });
 });

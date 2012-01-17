@@ -9,6 +9,24 @@
       = form.label :name
       = form.text_field :name
       = reqd
+
+%fieldset
+  %legend Ingredients
+  %table.prices_form
+    %tfoot
+      %tr
+        %td
+          .add_child= add_nested_fields_for(form, :items, 'items', { :label => '+ Add Item', :partial => 'formulations/item_form', :object => FormulationItem.new })
+        %td{ :colspan => 3} Total
+        %td
+          = ThreadLocal.current_currency
+          %input#total_price{ :type => 'text', :class => 'numeric', :readonly => true, :value => form.object.new_record? ? nil : form.object.unit_price.round(2) }
+    %tbody#items
+      = form.fields_for :items do |item_form|
+        = render :partial => 'formulations/item_form', :locals => { :form => item_form }
+
+%fieldset 
+  %ol.form
     %li
       = form.label :top_note
       = form.text_area :top_note, { :class => 'elastic', :style => 'width: 495px!important;height: 40px;' }
@@ -18,27 +36,43 @@
     %li
       = form.label :base_note
       = form.text_area :base_note, { :class => 'elastic', :style => 'width: 495px!important;height: 40px;' }
-%fieldset#items
-  %legend Ingredients
-  = form.fields_for :items do |item_form|
-    = render :partial => 'formulations/item_form', :locals => { :form => item_form }
-.add_child= add_nested_fields_for(form, :items, 'items', { :label => '+ Add Item', :partial => 'formulations/item_form', :object => FormulationItem.new })
 
 - content_for :tail do
   :javascript
     $(function() {
       $("body").delegate(".compound_type", 'change', function() {
-        $(this).parents('.inline_form').find('.compound').val('').focus();
+        $(this).parents('.prices_form').find('.compound').val('').focus();
       });
       $("body").delegate(".compound", 'focus', function() {
-        var url = $(this).parents('.inline_form').find('.compound_type').val() == 'Ingredient' ? '#{autocomplete_ingredients_path}' : '#{autocomplete_accords_path}';
+        var url = $(this).parents('.prices_form').find('.compound_type').val() == 'Ingredient' ? '#{autocomplete_ingredients_path}' : '#{autocomplete_accords_path}';
         $(this).autocomplete({
           source: url,
           minLength: 2,
           select: function( event, ui ) {
             $(this).next('.compound_id').val(ui.item.id);
+            $(this).parents('.item').find('input.price_per_gram').val(ui.item.price_per_gram);
+            $(this).parents('.item').find('span.price_per_gram').html(ui.item.price_per_gram);
+            calculatePrice($(this).parents('.item'));
           }
         });
       });
 
+      $('.quantity').live('change', function() {
+        calculatePrice($(this).parents('.item'));
+      });
+      //$('.remove :checkbox').change(calculateTotalPrice);
+      //$('.remove a').live('click', calculateTotalPrice);
+      setInterval("calculateTotalPrice()", 1000);
     });
+    function calculatePrice(node) {
+      var price_per_gram = node.find('.price_per_gram').val();
+      var quantity = node.find('.quantity').val();
+      node.find(".price").val(Math.round(price_per_gram * quantity * 100) / 100);
+    }
+    function calculateTotalPrice() {
+      var sum = 0;
+      $('#items .item:not(.removed) .price').each(function() {
+        sum += parseFloat($(this).val());
+      });
+      $('#total_price').val(sum);
+    }

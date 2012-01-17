@@ -17,26 +17,15 @@ class Ingredient < ActiveRecord::Base
     prices.exists?
   end
 
-  def gross_price(as_on = Date.today)
-    p = prices.gross.as_on(as_on)
+  def gross_price(opts = {})
+    opts.reverse_merge!(ThreadLocal.price_preferences)
+    p = prices.gross.as_on(opts[:as_on])
   end
 
-#  def gross_price(currency_code, as_on = Date.today)
-#    currency_code = currency_code.to_s.downcase.to_sym
-#    price = prices.as_on(as_on)
-#    if currency_code == :inr
-#      if price.in?(:inr)
-#        amount = price.to(:inr) * (1 + (tax.try(:amount) || 0))
-#      else
-#        amount = price.to(:inr) * (1 + (custom_duty.try(:amount) || 0))
-#      end
-#    else
-#      amount = price.to(currency_code)
-#    end
-#  end
-#
-  def price_per_gram(currency_code = 'INR')
-    gross_price(currency_code) / UNIT_WEIGHT rescue nil
+  #def price_per_gram(currency_code = 'INR')
+  def price_per_gram(opts = {})
+    opts.reverse_merge!(ThreadLocal.price_preferences)
+    gross_price(opts).in(opts[:currency_code]) / UNIT_WEIGHT #rescue nil
   end
 
   class << self

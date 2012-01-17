@@ -7,3 +7,4 @@ config/database.yml
 notes.txt
 tp
 ignore
+*.bak

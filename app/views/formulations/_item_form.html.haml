@@ -1,12 +1,5 @@
-%ol.inline_form
-  %li.remove
-    - unless form.object.new_record?
-      = form.check_box :_destroy
-      = form.label :_destroy, "Remove", :class => 'inline'
-    - else
-      %a{ :href => '#' } Remove
-    
-  %li{ :style => 'width: 100px' }
+%tr.item.row
+  %td{ :style => 'width: 100px' }
     = form.label :compound_type, 'Type'
 
     - unless form.object.compound.present?
@@ -14,7 +7,7 @@
     - else
       = form.object.compound_type
       = form.hidden_field :compound_type
-  %li{ :style => 'width: 400px' }
+  %td{ :style => 'width: 300px' }
     = form.label :compound_name, "Compound"
     - unless form.object.compound.present?
       = form.text_field :compound_name, :class => 'compound'
@@ -23,7 +16,22 @@
     - else
       = form.object.compound
       = form.hidden_field :compound_id
-  %li
+  %td
     = form.label :quantity
-    = form.text_field :quantity, :class => 'numeric'
+    = form.text_field :quantity, :class => 'numeric quantity'
     grams
+  %td
+    = label_tag :price_per_gram
+    = ThreadLocal.current_currency
+    %input{ :type => 'text', :class => 'numeric price_per_gram', :disabled => true, :readonly => true, :value => form.object.compound.present? ? form.object.compound.price_per_gram.round(2) : nil }
+  %td
+    = label_tag :price
+    = ThreadLocal.current_currency
+    %input{ :type => 'text', :class => 'numeric price', :disabled => true, :readonly => true, :value => form.object.compound.present? ? form.object.price.round(2) : nil }
+  %td.remove
+    - unless form.object.new_record?
+      = form.check_box :_destroy
+      = form.label :_destroy, "Remove", :class => 'inline'
+    - else
+      %a{ :href => '#' } Remove
+

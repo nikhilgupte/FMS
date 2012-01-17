@@ -6,6 +6,10 @@ class Currency < ActiveRecord::Base
 
   before_save :upcase_code
 
+  def to_s
+    code
+  end
+
   class << self
     %w(usd eur).each do |code|
       define_method "#{code}_to_inr" do |amount, as_on = Date.today|
