@@ -5,7 +5,7 @@ Currency.seed :code, [
 ]
 inr = Currency.find_by_code("INR")
 prices = Price.seed :priceable_type, :priceable_id, [
-  { :priceable_type => 'Currency', :priceable_id => Currency.find_by_code("USD").id, :inr => 44.795, :as_on => Time.parse("2011-06-05"), :calculated => false },
-  { :priceable_type => 'Currency', :priceable_id => Currency.find_by_code("EUR").id, :inr => 65.564, :as_on => Time.parse("2011-06-05"), :calculated => false },
-  { :priceable_type => 'Currency', :priceable_id => Currency.find_by_code("INR").id, :inr => 1, :as_on => Time.parse("2011-06-05"), :calculated => false }
+  { :priceable_type => 'Currency', :priceable_id => Currency.find_by_code("USD").id, :currency_code => 'inr', :amount => 44.795, :applicable_from => Time.parse("2011-06-05") },
+  { :priceable_type => 'Currency', :priceable_id => Currency.find_by_code("EUR").id, :currency_code => 'inr', :amount => 65.564, :applicable_from => Time.parse("2011-06-05") },
+  { :priceable_type => 'Currency', :priceable_id => Currency.find_by_code("INR").id, :currency_code => 'inr', :amount => 1, :applicable_from => Time.parse("2011-06-05") }
 ]

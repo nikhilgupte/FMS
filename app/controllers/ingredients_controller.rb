@@ -5,7 +5,7 @@ class IngredientsController < ApplicationController
   end
 
   def index
-    @search = Ingredient.with_price.search(params[:search])    
+    @search = Ingredient.search(params[:search])    
     @ingredients = @search.paginate(:page => params[:page], :per_page => 50)
   end
 

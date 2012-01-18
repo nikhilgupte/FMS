@@ -1,14 +1,7 @@
 - @page_title = @formulation
 
-- if @formulation_version.draft?
-  .notice
-    You are viewing a draft version of this formulation.
-    - if @formulation.published?
-      == Switch to the #{link_to 'current version', @formulation} (published on #{@formulation.published_at.to_s(:short)})
-- else
-  - if !@formulation_version.current?
-    .notice
-      == You aren't viewing the current version of this formulation. Switch to the #{link_to 'current version', @formulation} (published on #{@formulation.published_at.to_s(:short)})
+- if !@formulation_version.current?
+  .notice== You aren't viewing the current version of this formulation. Switch to the #{link_to('current version', @formulation)}
 
 = render 'shared/price_preferences_form'
 %ul.buttons
@@ -19,7 +12,7 @@
   %li.select
     %a More
     %ul
-      %li= link_to "Show All Versions", [@formulation, :formulation_versions]
+      %li= link_to "Show All Versions (#{@formulation.versions.count})", [@formulation, :formulation_versions]
       %li= link_to "Copy", new_fragrance_path(:copy_of_id => @formulation_version.id)
 
 = render :partial => 'formulation_versions/header', :locals => { :formulation_version => @formulation_version }

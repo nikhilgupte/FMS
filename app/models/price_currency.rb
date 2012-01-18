@@ -1,3 +1,3 @@
-class PriceCurrency < ActiveRecord::Base
-  belongs_to :price
-end
+#class PriceCurrency < ActiveRecord::Base
+#  belongs_to :price
+#end

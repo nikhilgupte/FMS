@@ -7,7 +7,7 @@ class AccordsController < FormulationsController
 
   def new
     @formulation = Accord.new
-    @formulation.build_draft_version.init
+    @formulation.versions.build.init
     render "formulations/new"
   end
 
@@ -30,6 +30,6 @@ class AccordsController < FormulationsController
   end
 
   def autocomplete
-    render :json => Accord.with_name_or_code(params[:term]).limit(10).collect{|i| { :id => i.id, :value => i.to_s } }
+    render :json => Accord.with_name_or_code(params[:term]).limit(10).collect{|i| { :id => i.id, :value => i.to_s, :price_per_gram => i.price_per_gram.round(2) } }
   end
 end

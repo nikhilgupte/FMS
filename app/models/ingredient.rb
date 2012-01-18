@@ -22,7 +22,6 @@ class Ingredient < ActiveRecord::Base
     p = prices.gross.as_on(opts[:as_on])
   end
 
-  #def price_per_gram(currency_code = 'INR')
   def price_per_gram(opts = {})
     opts.reverse_merge!(ThreadLocal.price_preferences)
     gross_price(opts).in(opts[:currency_code]) / UNIT_WEIGHT #rescue nil
@@ -33,21 +32,33 @@ class Ingredient < ActiveRecord::Base
       where("lower(code) = ?", code.strip.downcase).first
     end
     
-    def import_prices(file, as_on = nil)
+    def import(file)
+      CSV.read(file, :headers => true, :header_converters => :downcase).each do |row|
+        code = row['code'].strip
+        ingredient = Ingredient.find_by_code(row['code']) || Ingredient.new(:code => code)
+        ingredient.name = row['name']
+        ingredient.save
+      end
+    end
+
+    def import_prices(file, applicable_from = Date.today)
       CSV.read(file, :headers => true, :header_converters => :downcase).each do |row|
         if(ingredient = Ingredient.find_by_code(row['code'])).present?
           prices = { :inr => row['inr'], :usd => row['usd'], :eur => row['eur'] }
-          as_on = row['date'] || row['as_on'] || Date.today
+          as_on = applicable_from
+          if row['applicable_from'].present?
+            as_on = Date.parse(row['applicable_from'])
+          end
           ingredient.create_or_update_price(as_on, prices)
         end
       end
     end
+  end
 
-    def create_or_update_price(as_on, price_values)
-      price = prices.where(:as_on => as_on).first || prices.build(:as_on => as_on)
-      price.attributes = price_values.merge(:calculated => false)
-      price.save!
-    end
+  def create_or_update_price(as_on, price_values)
+    price = prices.applicable_from(as_on).first || prices.build(:applicable_from => as_on)
+    price.attributes = price_values
+    price.save
   end
 
   def to_s

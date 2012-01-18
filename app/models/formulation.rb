@@ -10,7 +10,7 @@ class Formulation < ActiveRecord::Base
   validates :product_year, :presence => true
   validates :origin_formula_id, :uniqueness => { :case_insensitive => true }, :allow_blank => true
 
-  delegate :name, :state, :published?, :published_at, :constituents, :items, :net_weight, :unit_price, :net_weight, :to => :current_version
+  delegate :name, :state, :price_per_gram, :published?, :published_at, :constituents, :items, :net_weight, :unit_price, :net_weight, :to => :current_version
 
   before_create :generate_code!
 

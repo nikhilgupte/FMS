@@ -60,8 +60,9 @@
       $('.quantity').live('change', function() {
         calculatePrice($(this).parents('.item'));
       });
-      //$('.remove :checkbox').change(calculateTotalPrice);
-      //$('.remove a').live('click', calculateTotalPrice);
+      $('#items .item').each(function() {
+        calculatePrice($(this));
+      });
       setInterval("calculateTotalPrice()", 1000);
     });
     function calculatePrice(node) {
@@ -72,7 +73,8 @@
     function calculateTotalPrice() {
       var sum = 0;
       $('#items .item:not(.removed) .price').each(function() {
-        sum += parseFloat($(this).val());
+        var val = parseFloat($(this).val());
+        if(!isNaN(val)) sum += parseFloat($(this).val());
       });
-      $('#total_price').val(sum);
+      $('#total_price').val(Math.round(sum * 100) / 100);
     }

@@ -7,7 +7,7 @@ class IngredientPrice < ActiveRecord::Base
   SUPPORTED_CURRENCIES = { 'INR' => 'Rs. ', 'USD' => '$', 'EUR' => '€' }
 
   belongs_to :priceable, :polymorphic => true
-  has_many :currencies, :class_name => 'PriceCurrency'
+  #has_many :currencies, :class_name => 'PriceCurrency'
   scope :chronological, order(:applicable_from.asc)
   scope :net, where(:ingredient_price_list_id => nil)
   scope :gross, where(:ingredient_price_list_id.ne => nil)
@@ -45,9 +45,7 @@ class IngredientPrice < ActiveRecord::Base
     else
       target_currency_rate = Currency.find_by_code!(currency_code).prices.as_on(applicable_from).amount
       SUPPORTED_CURRENCIES.keys.each do |supported_currency|
-        p "supported_currency: #{supported_currency}"
         if in?(supported_currency)
-          #supported_currency_rate = Currency.find_by_code!(supported_currency).prices.last.inr
           supported_currency_rate = Currency.find_by_code!(supported_currency).prices.as_on(applicable_from).amount
           return amount(supported_currency) * supported_currency_rate / target_currency_rate
         end

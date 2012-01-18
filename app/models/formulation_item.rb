@@ -24,7 +24,6 @@ class FormulationItem < ActiveRecord::Base
     quantity * 100.0 / formulation_version.net_weight
   end
 
-  #def price(currency_code = 'INR')
   def price(opts = {})
     constituents.price(opts).to_f
   end

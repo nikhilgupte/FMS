@@ -35,3 +35,4 @@ gem "meta_search"
 #gem "squeel", :git => "git://github.com/ernie/squeel.git"
 gem 'validates_timeliness'
 gem "heroku", :group => [:development]
+gem "taps", :group => [:development]

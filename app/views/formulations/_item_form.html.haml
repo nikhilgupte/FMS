@@ -27,7 +27,7 @@
   %td
     = label_tag :price
     = ThreadLocal.current_currency
-    %input{ :type => 'text', :class => 'numeric price', :disabled => true, :readonly => true, :value => form.object.compound.present? ? form.object.price.round(2) : nil }
+    %input{ :type => 'text', :class => 'numeric price', :disabled => true, :readonly => true }
   %td.remove
     - unless form.object.new_record?
       = form.check_box :_destroy

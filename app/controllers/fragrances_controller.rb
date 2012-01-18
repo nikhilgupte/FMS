@@ -7,7 +7,6 @@ class FragrancesController < FormulationsController
 
   def new
     @formulation = Fragrance.new
-    #@formulation.build_draft_version.init
     @formulation.versions.build.init
     render "formulations/new"
   end
